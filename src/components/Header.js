@@ -14,7 +14,8 @@ export default function Header({ deviceHeight }) {
         {
           height: Platform.OS === 'ios' ? deviceHeight * 1/9 : deviceHeight * 1/14
         }
-      ]}>
+      ]}
+    >
       <Text style={styles.text}>
         This is Header
       </Text>
@@ -32,6 +33,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: '#fff',
-    fontSize: 14
+    fontSize: 14,
+    fontFamily: "Poppins-Black"
   }
 })
