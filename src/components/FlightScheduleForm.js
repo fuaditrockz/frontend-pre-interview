@@ -17,8 +17,12 @@ export default function FlightScheduleForm({}) {
         </Text>
       </View>
       <Input
-        placeholder='Your Flight Number'
-        onChangeText={t => console.log(t)}
+        placeholder='Eg; JA 8890'
+        label='Flight Number'
+      />
+      <Input
+        placeholder='Eg; JA 8890'
+        label='Flight Number'
       />
     </View>
   )
