@@ -1,0 +1,12 @@
+{
+  "name": "frontend-pre-interview",
+  "displayName": "frontend-pre-interview",
+  "expo": {
+    "name": "frontend-pre-interview",
+    "slug": "frontend-pre-interview",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
