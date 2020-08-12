@@ -27,7 +27,6 @@ export default class SetupFlightScheduleScreen extends React.Component {
           >
             <View style={styles.listSchedulesContainer}>
               <Text>Here is the content inside panel</Text>
-              <Button title='Hide' onPress={() => this._panel.hide()} />
             </View>
           </SlidingUpPanel>
         )}
@@ -39,8 +38,9 @@ export default class SetupFlightScheduleScreen extends React.Component {
     return (
       <View style={styles.container}>
         <Header deviceHeight={height} />
-        <FlightScheduleForm />
-        <Button title='Show panel' onPress={() => this._panel.show()} />
+        <View style={styles.body}>
+          <FlightScheduleForm />
+        </View>
         {this.renderSlidingUpPanel()}
       </View>
     )
@@ -51,6 +51,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: '100%'
+    
+  },
+  body: {
+    paddingHorizontal: 20
   },
   listSchedulesContainer: {
     flex: 1,
