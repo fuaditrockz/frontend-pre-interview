@@ -5,8 +5,8 @@ import {
   StyleSheet,
   Platform
 } from 'react-native'
-import Icon from 'react-native-vector-icons/FontAwesome'
-import JetPlane from '../../assets/icons/compass.svg'
+
+import Logo from './Logo'
 
 export default function Header({ deviceHeight }) {
   return (
@@ -18,11 +18,7 @@ export default function Header({ deviceHeight }) {
         }
       ]}
     >
-      <Text style={styles.text}>
-        This is Header
-      </Text>
-      <Icon name="comments" size={30} color="#900" />
-      <JetPlane height={30} width={30} fill='#fff' />
+      <Logo size={40} color='#fff' />
     </View>
   )
 }
@@ -30,14 +26,8 @@ export default function Header({ deviceHeight }) {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    backgroundColor: '#05c46b',
     justifyContent: 'flex-end',
-    paddingBottom: 20,
-    paddingHorizontal: 10
-  },
-  text: {
-    color: '#fff',
-    fontSize: 14,
-    fontFamily: "Poppins-Black"
+    paddingBottom: Platform.OS === 'ios' ? 10 : 5,
+    paddingHorizontal: 20
   }
 })
