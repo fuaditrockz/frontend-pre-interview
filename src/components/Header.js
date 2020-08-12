@@ -6,6 +6,7 @@ import {
   Platform
 } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import JetPlane from '../../assets/icons/compass.svg'
 
 export default function Header({ deviceHeight }) {
   return (
@@ -21,6 +22,7 @@ export default function Header({ deviceHeight }) {
         This is Header
       </Text>
       <Icon name="comments" size={30} color="#900" />
+      <JetPlane height={30} width={30} fill='#fff' />
     </View>
   )
 }
