@@ -4,6 +4,8 @@ import {
   Text,
   StyleSheet
 } from 'react-native'
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5'
 
 import Input from './Input'
 
@@ -27,12 +29,16 @@ export default function FlightScheduleForm({}) {
         label='Flight Number'
         inputValue={flightNumber}
         onChangeValue={onChangeText}
-      />
+      >
+        <FontAwesomeIcon name="passport" size={15} color="#fff" />
+      </Input>
       <Input
         placeholder='Dec 20, 2020'
         label='Date'
         type='input-date'
-      />
+      >
+        <MaterialIcon name="date-range" size={15} color="#fff" />
+      </Input>
     </View>
   )
 }

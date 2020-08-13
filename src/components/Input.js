@@ -15,8 +15,8 @@ const emptyLabelPosition = {
 }
 
 const filledLabelPosition =  {
-  x: Platform.OS === 'ios' ? -20 : -16,
-  y: Platform.OS === 'ios' ? -10 : -5  
+  x: Platform.OS === 'ios' ? -20 : -20,
+  y: Platform.OS === 'ios' ? -15 : -5  
 }
 
 export default function Input({
@@ -24,10 +24,13 @@ export default function Input({
   onChangeValue,
   placeholder,
   label,
-  type
+  type,
+  children
 }) {
   const typeInputIsDate = type === 'input-date'
-  const [isInputActive, setIsInputActive] = useState(false)
+  const [isInputActive, setIsInputActive] = useState(
+    typeInputIsDate ? true : false
+  )
   const [date, setDate] = useState(new Date())
   const [dateModalVisible, setDateModalVisible] = useState(false)
 
@@ -101,6 +104,11 @@ export default function Input({
         onFocus={activateInput}
         onEndEditing={onEndEditing}
       />
+      {isInputActive && (
+        <View style={styles.icon}>
+          {children}
+        </View>
+      )}
       {typeInputIsDate && (
         <DateTimePickerModal
           isVisible={dateModalVisible}
@@ -116,7 +124,7 @@ export default function Input({
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: Platform.OS === 'ios' ? 20 : 15
+    marginBottom: Platform.OS === 'ios' ? 25 : 20
   },
   textInput: {
     height: Platform.OS === 'ios' ? 40 : 50,
@@ -124,11 +132,16 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
     fontFamily: 'Poppins-Regular',
     fontSize: 16,
+    paddingStart: 25,
     paddingBottom: -15,
     color: '#fff'
   },
   label: {
     color: '#d2dae2',
     fontFamily: 'Poppins-Bold'
+  },
+  icon: {
+    position: 'absolute',
+    top: Platform.OS === 'ios' ? 12 : 20
   }
 })
