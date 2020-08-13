@@ -4,6 +4,7 @@ import { NativeRouter, Route } from 'react-router-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import { RootContextProvider, RootContextConsumer } from './context'
+
 import SetupFlighScheduleScreen  from './screens/SetupFlightScheduleScreen'
 
 export default function App() {

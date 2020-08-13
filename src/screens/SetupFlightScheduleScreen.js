@@ -1,9 +1,11 @@
 import React from 'react'
-import { View, Text, Button, StyleSheet, Dimensions } from 'react-native'
+import { View, Text, Platform, StyleSheet, Dimensions } from 'react-native'
 import SlidingUpPanel from 'rn-sliding-up-panel'
 
 import { RootContextConsumer  } from '../context'
-import { FlightScheduleForm, Header } from '../components'
+
+import FlightScheduleForm from '../components/FlightScheduleForm'
+import Header from '../components/Header'
 
 const { height } = Dimensions.get('window')
 
@@ -22,7 +24,7 @@ export default class SetupFlightScheduleScreen extends React.Component {
         {context => (
           <SlidingUpPanel
             ref={c => this._panel = c}
-            draggableRange={{top: height, bottom: 400}}
+            draggableRange={{top: height, bottom: Platform.OS === 'ios' ? 400 : 300}}
             onDragEnd={value => this.onSlidePanel(context.changeStatusBarTheme)}
           >
             <View style={styles.listSchedulesContainer}>

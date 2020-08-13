@@ -7,7 +7,7 @@ import {
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5'
 
-import Input from './Input'
+import { Input, Button } from './atoms'
 
 export default function FlightScheduleForm({}) {
   const [flightNumber, setFlightNumber] = useState('')
@@ -36,7 +36,7 @@ export default function FlightScheduleForm({}) {
         inputValue={flightNumber}
         onChangeValue={onChangeFlightNumber}
       >
-        <FontAwesomeIcon name="passport" size={15} color="#fff" />
+        <FontAwesomeIcon name="passport" size={15} color='#fff' />
       </Input>
       <Input
         placeholder='Eg; Dec 20, 2020'
@@ -45,8 +45,13 @@ export default function FlightScheduleForm({}) {
         inputValue={flightDate}
         onChangeValue={onChangeFlightDate}
       >
-        <MaterialIcon name="date-range" size={15} color="#fff" />
+        <MaterialIcon name="date-range" size={15} color='#fff' />
       </Input>
+      <Button
+        title='SET REMINDER'
+        isHaveIcon
+        iconName='notifications'
+      />
     </View>
   )
 }

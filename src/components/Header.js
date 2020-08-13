@@ -6,7 +6,7 @@ import {
   Platform
 } from 'react-native'
 
-import Logo from './Logo'
+import { Logo } from './atoms'
 
 export default function Header({ deviceHeight }) {
   return (

@@ -5,7 +5,7 @@ import {
   StyleSheet
 } from 'react-native'
 
-import JetPlane from '../../assets/icons/plane.svg'
+import JetPlane from '../../../assets/icons/plane.svg'
 
 export default function Logo({ size, color }) {
   const {
