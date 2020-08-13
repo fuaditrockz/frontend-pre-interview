@@ -51,6 +51,8 @@ export default function FlightScheduleForm({}) {
         title='SET REMINDER'
         isHaveIcon
         iconName='notifications'
+        onPressButton={() => console.log('TEST')}
+        isDisabled={true}
       />
     </View>
   )

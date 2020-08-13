@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-  TouchableOpacity,
+  TouchableHighlight,
   View,
   Text,
   StyleSheet
@@ -11,13 +11,22 @@ export default function Button({
   title,
   onPressButton,
   isHaveIcon,
-  iconName
+  iconName,
+  isDisabled
 }) {
   return (
-    <TouchableOpacity
+    <TouchableHighlight
       onPress={onPressButton}
+      underlayColor='none'
+      activeOpacity={0.50}
+      disabled={isDisabled}
     >
-      <View style={styles.container}>
+      <View
+        style={[
+          styles.container,
+          { backgroundColor: isDisabled ?  '#808e9b' :  '#0fbcf9' }
+        ]}
+      >
         {isHaveIcon && (
           <View style={styles.icon}>
             <MaterialIcon name={iconName} size={20} color="#fff" />
@@ -27,7 +36,7 @@ export default function Button({
           {title}
         </Text>
       </View>
-    </TouchableOpacity>
+    </TouchableHighlight>
   )
 }
 
@@ -38,7 +47,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#0fbcf9',
     borderRadius: 5
   },
   text: {
