@@ -1,30 +1,48 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { View, Text, TextInput, StyleSheet, Animated, Platform } from 'react-native'
+import {
+  View,
+  Keyboard,
+  TextInput,
+  StyleSheet,
+  Animated,
+  Platform
+} from 'react-native'
+import DateTimePickerModal from "react-native-modal-datetime-picker"
 
-export default function Input({ placeholder, label, onChangeText, ref }) {
+const emptyLabelPosition = {
+  x: Platform.OS === 'ios' ? 0 : 5,
+  y: Platform.OS === 'ios' ? 10 : 20
+}
+
+const filledLabelPosition =  {
+  x: Platform.OS === 'ios' ? -20 : -16,
+  y: Platform.OS === 'ios' ? -10 : -5  
+}
+
+export default function Input({
+  inputValue,
+  onChangeValue,
+  placeholder,
+  label,
+  type
+}) {
+  const typeInputIsDate = type === 'input-date'
   const [isInputActive, setIsInputActive] = useState(false)
+  const [date, setDate] = useState(new Date())
+  const [dateModalVisible, setDateModalVisible] = useState(false)
+
   const labelPositionRef = useRef(new Animated.ValueXY(
-    {
-      x: Platform.OS === 'ios' ? 0 : 5,
-      y: Platform.OS === 'ios' ? 10 : 20
-    }
+    typeInputIsDate ? filledLabelPosition : emptyLabelPosition
   )).current
-  const labelFontSizeRef = useRef(new Animated.Value(1)).current
+
+  const labelFontSizeRef = useRef(new Animated.Value(
+    typeInputIsDate ? 0.8 : 1
+  )).current
   
-  const moveLabel = (statusPosition) => {
+  const animatedMoveLabel = (statusPosition) => {
     Animated.parallel([
       Animated.timing(labelPositionRef, {
-        toValue: statusPosition === 'move' ? (
-          {
-            x: Platform.OS === 'ios' ? -10 : -6,
-            y: Platform.OS === 'ios' ? -10 : -5  
-          }
-        ) : (
-          {
-            x: Platform.OS === 'ios' ? 0 : 5,
-            y: Platform.OS === 'ios' ? 10 : 20 
-          }
-        ),
+        toValue: statusPosition === 'move' ? filledLabelPosition : emptyLabelPosition,
         duration: 300,
         useNativeDriver: true
       }),
@@ -37,23 +55,37 @@ export default function Input({ placeholder, label, onChangeText, ref }) {
   }
 
   const activateInput = () => {
-    moveLabel('move')
+    animatedMoveLabel('move')
     setIsInputActive(true)
+    if (typeInputIsDate) {
+      setDateModalVisible(true)
+      setDate(new Date())
+      Keyboard.dismiss()
+    }
   }
 
   const onEndEditing = e => {
     if (!e.nativeEvent.text) {
       setIsInputActive(false)
-      moveLabel('back')
+      animatedMoveLabel('back')
     }
+  }
+
+  const onChange = (date) => {
+    setDate(date)
+    setDateModalVisible(false)
   }
 
   return (
     <View style={styles.container}>
       <Animated.View
         style={{
+          minWidth: 200,
           position: 'absolute',
-          transform: [{ translateX: labelPositionRef.x }, { translateY: labelPositionRef.y }]
+          transform: [
+            { translateX: labelPositionRef.x },
+            { translateY: labelPositionRef.y }
+          ]
         }}
       >
         <Animated.Text style={[ styles.label, { transform: [{ scale: labelFontSizeRef }] }]}>
@@ -62,13 +94,22 @@ export default function Input({ placeholder, label, onChangeText, ref }) {
       </Animated.View>
       <TextInput
         style={styles.textInput}
-        onChangeText={onChangeText}
-        /* value={100} */
+        onChangeText={onChangeValue}
+        value={typeInputIsDate ? date.toDateString() : inputValue}
         placeholder={!isInputActive ? '' : placeholder}
         placeholderTextColor='#C5CEE1'
         onFocus={activateInput}
         onEndEditing={onEndEditing}
       />
+      {typeInputIsDate && (
+        <DateTimePickerModal
+          isVisible={dateModalVisible}
+          mode="date"
+          value={date}
+          onConfirm={onChange}
+          onCancel={() => setDateModalVisible(!dateModalVisible)}
+        />
+      )}
     </View>
   )
 }

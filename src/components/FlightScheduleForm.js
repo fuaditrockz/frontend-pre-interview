@@ -1,14 +1,20 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   View,
   Text,
-  TextInput,
   StyleSheet
 } from 'react-native'
 
 import Input from './Input'
 
 export default function FlightScheduleForm({}) {
+  const [flightNumber, setFlightNumber] = useState('')
+
+  const onChangeText = e => {
+    console.log(e)
+    setFlightNumber(e)
+  }
+
   return (
     <View>
       <View style={styles.header}>
@@ -19,10 +25,13 @@ export default function FlightScheduleForm({}) {
       <Input
         placeholder='Eg; JA 8890'
         label='Flight Number'
+        inputValue={flightNumber}
+        onChangeValue={onChangeText}
       />
       <Input
-        placeholder='Eg; JA 8890'
-        label='Flight Number'
+        placeholder='Dec 20, 2020'
+        label='Date'
+        type='input-date'
       />
     </View>
   )
