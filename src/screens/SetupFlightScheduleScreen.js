@@ -1,9 +1,17 @@
 import React from 'react'
-import { View, Text, Platform, StyleSheet, Dimensions } from 'react-native'
+import {
+  View,
+  Text,
+  Platform,
+  StyleSheet,
+  Dimensions,
+  ScrollView
+} from 'react-native'
 import SlidingUpPanel from 'rn-sliding-up-panel'
 
 import { RootContextConsumer  } from '../context'
 
+import { SavedFlightCard } from '../components/atoms'
 import FlightScheduleForm from '../components/FlightScheduleForm'
 import Header from '../components/Header'
 
@@ -18,6 +26,18 @@ export default class SetupFlightScheduleScreen extends React.Component {
     changeStatusBar()
   }
 
+  renderAllSavedFlights(flights) {
+    return flights.map((flight, index) => {
+      return (
+        <SavedFlightCard
+          key={index}
+          flightNumber={flight.flightNumber}
+          flightDate={flight.flightDate.toDateString()}
+        />
+      )
+    })
+  }
+
   renderSlidingUpPanel() {
     return (
       <RootContextConsumer>
@@ -27,9 +47,16 @@ export default class SetupFlightScheduleScreen extends React.Component {
             draggableRange={{top: height, bottom: Platform.OS === 'ios' ? 400 : 300}}
             onDragEnd={value => this.onSlidePanel(context.changeStatusBarTheme)}
           >
-            <View style={styles.listSchedulesContainer}>
-              <Text>Here is the content inside panel</Text>
-            </View>
+            {dragHandler => (
+              <View style={styles.listSchedulesContainer}>
+                <View style={styles.dragHandler} {...dragHandler}>
+                  <Text>Drag handler</Text>
+                </View>
+                <ScrollView style={styles.scrollView}>
+                  {this.renderAllSavedFlights(context.savedFlights)}
+                </ScrollView>
+              </View>
+            )}
           </SlidingUpPanel>
         )}
       </RootContextConsumer>
@@ -53,7 +80,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: '100%'
-    
   },
   body: {
     paddingHorizontal: 20
@@ -65,6 +91,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderTopLeftRadius: 20,
-    borderTopRightRadius: 20
+    borderTopRightRadius: 20,
+    zIndex: 1
+  },
+  dragHandler: {
+    alignSelf: 'stretch',
+    height: 64,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  scrollView: {
+    width: '100%',
+    paddingHorizontal: 20
   }
 })
