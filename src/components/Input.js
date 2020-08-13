@@ -48,8 +48,6 @@ export default function Input({ placeholder, label, onChangeText, ref }) {
     }
   }
 
-  console.log(isInputActive)
-
   return (
     <View style={styles.container}>
       <Animated.View
