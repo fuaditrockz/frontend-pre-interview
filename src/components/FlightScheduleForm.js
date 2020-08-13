@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5'
 
+import { RootContext, RootContextConsumer } from '../context'
 import { Input, Button } from './atoms'
 
 export default function FlightScheduleForm({}) {
@@ -14,13 +15,16 @@ export default function FlightScheduleForm({}) {
   const [flightDate, setFlightDate] = useState(new Date())
 
   const onChangeFlightNumber = flNumber => {
-    console.log('SET FLIGHT NUMBER', flNumber)
     setFlightNumber(flNumber)
   }
 
   const onChangeFlightDate = (date) => {
-    console.log('SET FLIGHT DATE', date)
     setFlightDate(date)
+  }
+
+  const eraseAllStateValues = () => {
+    setFlightDate(new Date())
+    setFlightNumber('')
   }
 
   return (
@@ -47,13 +51,23 @@ export default function FlightScheduleForm({}) {
       >
         <MaterialIcon name="date-range" size={15} color='#fff' />
       </Input>
-      <Button
-        title='SET REMINDER'
-        isHaveIcon
-        iconName='notifications'
-        onPressButton={() => console.log('TEST')}
-        isDisabled={true}
-      />
+      <RootContextConsumer>
+        {context => (
+          <Button
+            title='SET REMINDER'
+            isHaveIcon
+            iconName='notifications'
+            onPressButton={() => {
+              context.saveFlight({
+                flightNumber,
+                flightDate
+              })
+              eraseAllStateValues()
+            }}
+            isDisabled={false}
+          />
+        )}
+      </RootContextConsumer>
     </View>
   )
 }

@@ -1,6 +1,7 @@
 import React from 'react'
 import { Platform } from 'react-native'
-const RootContext = React.createContext()
+
+export const RootContext = React.createContext()
 
 export class RootContextProvider extends React.Component {
   constructor(props) {
@@ -10,10 +11,12 @@ export class RootContextProvider extends React.Component {
       theme: {
         statusBar: 'light-content',
         backgroundColor: '#3c40c6'
-      }
+      },
+      savedFlights: []
     }
 
     this.changeStatusBarTheme = this.changeStatusBarTheme.bind(this)
+    this.saveFlight = this.saveFlight.bind(this)
   }
 
   changeStatusBarTheme() {
@@ -26,14 +29,23 @@ export class RootContextProvider extends React.Component {
     })
   }
 
+  saveFlight(flight) {
+    const { savedFlights } = this.state
+    this.setState({
+      savedFlights: [...savedFlights, flight]
+    })
+  }
+
   render() {
     const { state } = this
     console.log(state.theme.backgroundColor)
+    console.log(state.savedFlights)
     return (
       <RootContext.Provider
         value={{
           ...state,
-          changeStatusBarTheme: this.changeStatusBarTheme
+          changeStatusBarTheme: this.changeStatusBarTheme,
+          saveFlight: this.saveFlight
         }}
       >
         {this.props.children}
