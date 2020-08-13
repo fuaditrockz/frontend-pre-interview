@@ -11,10 +11,16 @@ import Input from './Input'
 
 export default function FlightScheduleForm({}) {
   const [flightNumber, setFlightNumber] = useState('')
+  const [flightDate, setFlightDate] = useState(new Date())
 
-  const onChangeText = e => {
-    console.log(e)
-    setFlightNumber(e)
+  const onChangeFlightNumber = flNumber => {
+    console.log('SET FLIGHT NUMBER', flNumber)
+    setFlightNumber(flNumber)
+  }
+
+  const onChangeFlightDate = (date) => {
+    console.log('SET FLIGHT DATE', date)
+    setFlightDate(date)
   }
 
   return (
@@ -28,14 +34,16 @@ export default function FlightScheduleForm({}) {
         placeholder='Eg; JA 8890'
         label='Flight Number'
         inputValue={flightNumber}
-        onChangeValue={onChangeText}
+        onChangeValue={onChangeFlightNumber}
       >
         <FontAwesomeIcon name="passport" size={15} color="#fff" />
       </Input>
       <Input
-        placeholder='Dec 20, 2020'
+        placeholder='Eg; Dec 20, 2020'
         label='Date'
         type='input-date'
+        inputValue={flightDate}
+        onChangeValue={onChangeFlightDate}
       >
         <MaterialIcon name="date-range" size={15} color="#fff" />
       </Input>

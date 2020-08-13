@@ -28,29 +28,29 @@ export default function Input({
   children
 }) {
   const typeInputIsDate = type === 'input-date'
+
   const [isInputActive, setIsInputActive] = useState(
     typeInputIsDate ? true : false
   )
-  const [date, setDate] = useState(new Date())
-  const [dateModalVisible, setDateModalVisible] = useState(false)
+  const [calendarVisible, setCalendarVisible] = useState(false)
 
   const labelPositionRef = useRef(new Animated.ValueXY(
     typeInputIsDate ? filledLabelPosition : emptyLabelPosition
   )).current
-
   const labelFontSizeRef = useRef(new Animated.Value(
     typeInputIsDate ? 0.8 : 1
   )).current
   
   const animatedMoveLabel = (statusPosition) => {
+    const statusPositionIsMove = statusPosition === 'move'
     Animated.parallel([
       Animated.timing(labelPositionRef, {
-        toValue: statusPosition === 'move' ? filledLabelPosition : emptyLabelPosition,
+        toValue: statusPositionIsMove ? filledLabelPosition : emptyLabelPosition,
         duration: 300,
         useNativeDriver: true
       }),
       Animated.timing(labelFontSizeRef, {
-        toValue: statusPosition === 'move' ? 0.8 : 1,
+        toValue: statusPositionIsMove ? 0.8 : 1,
         duration: 300,
         useNativeDriver: true
       })
@@ -61,8 +61,7 @@ export default function Input({
     animatedMoveLabel('move')
     setIsInputActive(true)
     if (typeInputIsDate) {
-      setDateModalVisible(true)
-      setDate(new Date())
+      setCalendarVisible(true)
       Keyboard.dismiss()
     }
   }
@@ -72,11 +71,6 @@ export default function Input({
       setIsInputActive(false)
       animatedMoveLabel('back')
     }
-  }
-
-  const onChange = (date) => {
-    setDate(date)
-    setDateModalVisible(false)
   }
 
   return (
@@ -98,7 +92,7 @@ export default function Input({
       <TextInput
         style={styles.textInput}
         onChangeText={onChangeValue}
-        value={typeInputIsDate ? date.toDateString() : inputValue}
+        value={typeInputIsDate ? inputValue.toDateString() : inputValue}
         placeholder={!isInputActive ? '' : placeholder}
         placeholderTextColor='#C5CEE1'
         onFocus={activateInput}
@@ -111,11 +105,14 @@ export default function Input({
       )}
       {typeInputIsDate && (
         <DateTimePickerModal
-          isVisible={dateModalVisible}
+          isVisible={calendarVisible}
           mode="date"
-          value={date}
-          onConfirm={onChange}
-          onCancel={() => setDateModalVisible(!dateModalVisible)}
+          value={inputValue}
+          onConfirm={date => {
+            onChangeValue(date)
+            setCalendarVisible(false)
+          }}
+          onCancel={() => setCalendarVisible(!calendarVisible)}
         />
       )}
     </View>
