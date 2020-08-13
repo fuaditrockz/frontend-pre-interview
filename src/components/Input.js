@@ -5,7 +5,7 @@ export default function Input({ placeholder, label, onChangeText, ref }) {
   const [isInputActive, setIsInputActive] = useState(false)
   const labelPositionRef = useRef(new Animated.ValueXY(
     {
-      x: Platform.OS === 'ios' ? 10 : 10,
+      x: Platform.OS === 'ios' ? 0 : 5,
       y: Platform.OS === 'ios' ? 10 : 20
     }
   )).current
@@ -16,12 +16,12 @@ export default function Input({ placeholder, label, onChangeText, ref }) {
       Animated.timing(labelPositionRef, {
         toValue: statusPosition === 'move' ? (
           {
-            x: 0,
+            x: Platform.OS === 'ios' ? -10 : -6,
             y: Platform.OS === 'ios' ? -10 : -5  
           }
         ) : (
           {
-            x: 10,
+            x: Platform.OS === 'ios' ? 0 : 5,
             y: Platform.OS === 'ios' ? 10 : 20 
           }
         ),
@@ -83,7 +83,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
     fontFamily: 'Poppins-Regular',
     fontSize: 16,
-    paddingHorizontal: 10,
     paddingBottom: -15,
     color: '#fff'
   },
