@@ -2,19 +2,21 @@ import React, { useState, useContext } from 'react'
 import {
   View,
   Text,
-  StyleSheet
+  StyleSheet,
+  Image
 } from 'react-native'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5'
 
 import { formatDate } from '../helpers'
 import { RootContext, RootContextConsumer } from '../context'
-import { Input, Button } from './atoms'
+import { Input, Button, Modal } from './atoms'
 
 export default function FlightScheduleForm({}) {
   const { airlines, saveFlight } = useContext(RootContext)
   const [flightNumber, setFlightNumber] = useState('')
   const [flightDate, setFlightDate] = useState(new Date())
+  const [isError, setIsError] = useState(false)
 
   const onChangeFlightNumber = flNumber => {
     setFlightNumber(flNumber)
@@ -40,6 +42,7 @@ export default function FlightScheduleForm({}) {
         return !flNumberIndex
       })
       console.log('getDataFromFlightAPI', data[0].list)
+      console.log('matchedData', matchedData)
       return matchedData
     }
     catch (err) {
@@ -50,12 +53,16 @@ export default function FlightScheduleForm({}) {
   const setReminder = async () => {
     try {
       const fixedData = await matchLocalStateToTheAPI(flightDate)
-      saveFlight({
-        ...fixedData[0],
-        flightNumber,
-        flightDate,
-        isActive: true
-      })
+      if (fixedData.length === 0) {
+        setIsError(true)
+      } else {
+        await saveFlight({
+          ...fixedData[0],
+          flightNumber,
+          flightDate,
+          isActive: true
+        })
+      }
       eraseAllStateValues()
     } catch (err) {
       console.log(err)
@@ -93,6 +100,21 @@ export default function FlightScheduleForm({}) {
         onPressButton={setReminder}
         isDisabled={false}
       />
+      <Modal
+        isModalVisible={isError}
+        onPressClose={() => setIsError(false)}
+      >
+        <Image
+          style={{
+            width: 200,
+            height: 200
+          }}
+          source={require('../../assets/404.gif')}
+        />
+        <Text style={styles.notFoundDialog}>
+          We're sorry, flight number {flightNumber} not found.
+        </Text>
+      </Modal>
     </View>
   )
 }
@@ -113,5 +135,11 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Regular',
     paddingHorizontal: 10,
     color: '#fff'
+  },
+  notFoundDialog: {
+    fontFamily: 'Poppins-Medium',
+    marginBottom: 20,
+    fontSize: 14,
+    textAlign: 'center'
   }
 })

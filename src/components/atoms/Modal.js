@@ -2,9 +2,14 @@ import React from 'react'
 import {
   Modal as RNModal,
   View,
+  Text,
   Button,
-  StyleSheet
+  StyleSheet,
+  Dimensions,
+  TouchableHighlight
 } from 'react-native'
+
+const { height, width } = Dimensions.get('window')
 
 export default function Modal({
   children,
@@ -23,10 +28,13 @@ export default function Modal({
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
           {children}
-          <Button
+          <TouchableHighlight
             onPress={onPressClose}
-            title="Close"
-          />
+            underlayColor='none'
+            style={styles.closeButton}
+          >
+            <Text style={styles.textClose}>Close</Text>
+          </TouchableHighlight>
         </View>
       </View>
     </RNModal>
@@ -35,14 +43,21 @@ export default function Modal({
 
 const styles = StyleSheet.create({
   centeredView: {
+    height,
+    width,
+    position: 'absolute',
+    top: Platform.OS === 'ios' ? -22 : -20,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     marginTop: 22
   },
   modalView: {
+    minHeight: 200,
+    width: '80%',
     margin: 20,
-    backgroundColor: "white",
+    backgroundColor: "#f7f7f7",
     borderRadius: 20,
     alignItems: "center",
     shadowColor: "#000",
@@ -53,5 +68,19 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5
+  },
+  closeButton: {
+    width: '100%',
+    backgroundColor: '#f53b57',
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    alignItems: 'center',
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20
+  },
+  textClose: {
+    fontFamily: 'Poppins-Bold',
+    color: '#fff',
+    fontSize: 16
   }
 })
