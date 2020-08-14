@@ -1,5 +1,5 @@
 import React from 'react'
-import { Platform } from 'react-native'
+import airlines from '../../assets/data/airlines.json'
 
 export const RootContext = React.createContext()
 
@@ -12,11 +12,20 @@ export class RootContextProvider extends React.Component {
         statusBar: 'light-content',
         backgroundColor: '#3c40c6'
       },
-      savedFlights: []
+      savedFlights: [],
+      airlines: []
     }
 
     this.changeStatusBarTheme = this.changeStatusBarTheme.bind(this)
     this.saveFlight = this.saveFlight.bind(this)
+  }
+
+  async UNSAFE_componentWillMount() {
+    const airlinesData = airlines
+    const convertedJSONData = await JSON.parse(JSON.stringify(airlinesData))
+    this.setState({
+      airlines: [convertedJSONData]
+    })
   }
 
   changeStatusBarTheme() {
@@ -40,6 +49,7 @@ export class RootContextProvider extends React.Component {
     const { state } = this
     console.log(state.theme.backgroundColor)
     console.log(state.savedFlights)
+    console.log(state.airlines)
     return (
       <RootContext.Provider
         value={{
