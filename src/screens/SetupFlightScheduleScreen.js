@@ -27,8 +27,6 @@ export default class SetupFlightScheduleScreen extends React.Component {
   }
 
   onSlidePanel(posValue, changeStatusBar) {
-    console.log(posValue)
-    console.log(height)
     const { isPanelFull } = this.state
 
     if (posValue === height) {

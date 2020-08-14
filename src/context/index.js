@@ -29,7 +29,6 @@ export class RootContextProvider extends React.Component {
   }
 
   changeStatusBarTheme(themeContent) {
-    const { statusBar, backgroundColor } = this.state.theme
     this.setState({
       theme: {
         statusBar: themeContent === 'light-content' ? 'dark-content' : 'light-content',
