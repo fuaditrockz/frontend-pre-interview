@@ -8,6 +8,7 @@ import {
   ScrollView
 } from 'react-native'
 import SlidingUpPanel from 'rn-sliding-up-panel'
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
 import { RootContextConsumer } from '../context'
 
@@ -20,16 +21,24 @@ const { height } = Dimensions.get('window')
 export default class SetupFlightScheduleScreen extends React.Component {
   constructor(props) {
     super(props)
+    this.state = {
+      isPanelFull: false
+    }
   }
 
   onSlidePanel(changeStatusBar) {
+    const { isPanelFull } = this.state
     changeStatusBar()
+    this.setState({
+      isPanelFull: !isPanelFull
+    })
   }
 
   renderAllSavedFlights(flights) {
     return flights.map((flight, index) => {
       return (
         <SavedFlightCard
+          index={index}
           key={index}
           flightNumber={flight.flightNumber}
           flightDate={flight.flightDate.toDateString()}
@@ -39,6 +48,7 @@ export default class SetupFlightScheduleScreen extends React.Component {
   }
 
   renderSlidingUpPanel() {
+    const { isPanelFull } = this.state
     return (
       <RootContextConsumer>
         {context => (
@@ -50,7 +60,11 @@ export default class SetupFlightScheduleScreen extends React.Component {
             {dragHandler => (
               <View style={styles.listSchedulesContainer}>
                 <View style={styles.dragHandler} {...dragHandler}>
-                  <Text>Drag handler</Text>
+                  <MaterialIcon
+                    name={`keyboard-arrow-${isPanelFull ? 'down' : 'up'}`}
+                    size={25}
+                    color='#485460'
+                  />
                 </View>
                 <ScrollView style={styles.scrollView}>
                   {this.renderAllSavedFlights(context.savedFlights)}
