@@ -9,7 +9,7 @@ import {
 } from 'react-native'
 import SlidingUpPanel from 'rn-sliding-up-panel'
 
-import { RootContextConsumer  } from '../context'
+import { RootContextConsumer } from '../context'
 
 import { SavedFlightCard } from '../components/atoms'
 import FlightScheduleForm from '../components/FlightScheduleForm'
