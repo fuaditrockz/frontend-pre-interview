@@ -48,7 +48,6 @@ export class RootContextProvider extends React.Component {
     const { state } = this
     console.log(state.theme.backgroundColor)
     console.log(state.savedFlights)
-    console.log(state.airlines)
     return (
       <RootContext.Provider
         value={{

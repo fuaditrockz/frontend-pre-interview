@@ -8,9 +8,9 @@ import {
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5'
 
-import { formatDate } from '../helpers'
-import { RootContext, RootContextConsumer } from '../context'
-import { Input, Button, Modal } from './atoms'
+import { formatDate } from '../../helpers'
+import { RootContext, RootContextConsumer } from '../../context'
+import { Input, Button, Modal } from '../atoms'
 
 export default function FlightScheduleForm({}) {
   const { airlines, saveFlight } = useContext(RootContext)
@@ -109,7 +109,7 @@ export default function FlightScheduleForm({}) {
             width: 200,
             height: 200
           }}
-          source={require('../../assets/404.gif')}
+          source={require('../../../assets/404.gif')}
         />
         <Text style={styles.notFoundDialog}>
           We're sorry, flight number {flightNumber} not found.

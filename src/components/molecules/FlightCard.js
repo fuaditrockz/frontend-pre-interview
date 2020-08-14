@@ -7,7 +7,7 @@ import {
 } from 'react-native'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
-export default function SavedFlightCard({
+export default function FlightCard({
   flightNumber,
   flightDate,
   isNotificationActive,

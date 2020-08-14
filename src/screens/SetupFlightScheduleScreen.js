@@ -1,20 +1,15 @@
 import React from 'react'
 import {
   View,
-  Text,
   Platform,
   StyleSheet,
-  Dimensions,
-  ScrollView
+  Dimensions
 } from 'react-native'
 import SlidingUpPanel from 'rn-sliding-up-panel'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
 import { RootContextConsumer } from '../context'
-
-import { SavedFlightCard } from '../components/atoms'
-import FlightScheduleForm from '../components/FlightScheduleForm'
-import Header from '../components/Header'
+import { SchedulesList, FlightScheduleForm, Header } from '../components/organisms'
 
 const { height } = Dimensions.get('window')
 
@@ -42,20 +37,6 @@ export default class SetupFlightScheduleScreen extends React.Component {
     }
   }
 
-  renderAllSavedFlights(flights) {
-    return flights.map((flight, index) => {
-      return (
-        <SavedFlightCard
-          index={index}
-          key={index}
-          flightNumber={flight.flightNumber}
-          flightDate={flight.flightDate.toDateString()}
-          isNotificationActive={flight.isActive}
-        />
-      )
-    })
-  }
-
   renderSlidingUpPanel() {
     const { isPanelFull } = this.state
     return (
@@ -75,9 +56,7 @@ export default class SetupFlightScheduleScreen extends React.Component {
                     color='#485460'
                   />
                 </View>
-                <ScrollView style={styles.scrollView}>
-                  {this.renderAllSavedFlights(context.savedFlights)}
-                </ScrollView>
+                <SchedulesList />
               </View>
             )}
           </SlidingUpPanel>
