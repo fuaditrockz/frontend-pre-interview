@@ -50,6 +50,7 @@ export default class SetupFlightScheduleScreen extends React.Component {
           key={index}
           flightNumber={flight.flightNumber}
           flightDate={flight.flightDate.toDateString()}
+          isNotificationActive={flight.isActive}
         />
       )
     })
