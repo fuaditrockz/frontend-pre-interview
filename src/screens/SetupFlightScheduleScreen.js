@@ -26,12 +26,22 @@ export default class SetupFlightScheduleScreen extends React.Component {
     }
   }
 
-  onSlidePanel(changeStatusBar) {
+  onSlidePanel(posValue, changeStatusBar) {
+    console.log(posValue)
+    console.log(height)
     const { isPanelFull } = this.state
-    changeStatusBar()
-    this.setState({
-      isPanelFull: !isPanelFull
-    })
+
+    if (posValue === height) {
+      changeStatusBar('light-content')
+      this.setState({
+        isPanelFull: !isPanelFull
+      }) 
+    } else if (posValue === (Platform.OS === 'ios' ? 400 : 300)) {
+      changeStatusBar('dark-content')
+      this.setState({
+        isPanelFull: !isPanelFull
+      }) 
+    }
   }
 
   renderAllSavedFlights(flights) {
@@ -55,7 +65,7 @@ export default class SetupFlightScheduleScreen extends React.Component {
           <SlidingUpPanel
             ref={c => this._panel = c}
             draggableRange={{top: height, bottom: Platform.OS === 'ios' ? 400 : 300}}
-            onDragEnd={value => this.onSlidePanel(context.changeStatusBarTheme)}
+            onDragEnd={value => this.onSlidePanel(value, context.changeStatusBarTheme)}
           >
             {dragHandler => (
               <View style={styles.listSchedulesContainer}>
@@ -116,6 +126,6 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     width: '100%',
-    paddingHorizontal: 20
+    paddingHorizontal: 10
   }
 })
