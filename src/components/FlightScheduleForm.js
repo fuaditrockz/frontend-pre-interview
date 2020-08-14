@@ -15,7 +15,6 @@ export default function FlightScheduleForm({}) {
   const { airlines, saveFlight } = useContext(RootContext)
   const [flightNumber, setFlightNumber] = useState('')
   const [flightDate, setFlightDate] = useState(new Date())
-  const [checkedData, setCheckedData] = useState([])
 
   const onChangeFlightNumber = flNumber => {
     setFlightNumber(flNumber)
@@ -30,50 +29,37 @@ export default function FlightScheduleForm({}) {
     setFlightNumber('')
   }
 
-  const getDataFromFlightAPI = async (date) => {
+  const matchLocalStateToTheAPI = async date => {
     const url = `https://www.hongkongairport.com/flightinfo-rest/rest/flights/past?date=${formatDate(date.toDateString())}&lang=en&cargo=false&arrival=false`
 
     try {
       const response = await fetch(url)
       const data = await response.json()
-      getFlightDetails(flightNumber, data[0].list)
+      const matchedData = await data[0].list.filter((item) => {
+        const flNumberIndex = item.flight.map(fl => fl.no).indexOf(flightNumber)
+        return !flNumberIndex
+      })
       console.log('getDataFromFlightAPI', data[0].list)
-      return data[0].list
+      return matchedData
     }
     catch (err) {
       return console.log(err)
     }
   }
 
-  const getFlightDetails = (flNumber, flDatas) => {
-    const result = flDatas.filter((item) => {
-        const flNumberIndex = item.flight.map(fl => fl.no).indexOf(flNumber)
-        return !flNumberIndex
-    })
-  
-    console.log('getFlightDetails', result)
-    saveFlight({
-      ...result[0],
-      flightNumber,
-      flightDate,
-      isActive: true
-    })
-    return result
-  }
-
   const setReminder = async () => {
-    const airlinesList = airlines[0].data
     try {
-      getDataFromFlightAPI(flightDate)
+      const fixedData = await matchLocalStateToTheAPI(flightDate)
+      saveFlight({
+        ...fixedData[0],
+        flightNumber,
+        flightDate,
+        isActive: true
+      })
       eraseAllStateValues()
     } catch (err) {
       console.log(err)
     }
-    /* saveFlight({
-      flightNumber,
-      flightDate,
-      isActive: true
-    }) */
   }
 
   return (
