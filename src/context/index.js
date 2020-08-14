@@ -1,4 +1,5 @@
 import React from 'react'
+
 import airlines from '../../assets/data/airlines.json'
 
 export const RootContext = React.createContext()
@@ -24,7 +25,7 @@ export class RootContextProvider extends React.Component {
     const airlinesData = airlines
     const convertedJSONData = await JSON.parse(JSON.stringify(airlinesData))
     this.setState({
-      airlines: [convertedJSONData]
+      airlines: [convertedJSONData.data]
     })
   }
 
