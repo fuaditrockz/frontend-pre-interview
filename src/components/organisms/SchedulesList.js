@@ -4,8 +4,12 @@ import {
   ScrollView
 } from 'react-native'
 
+import { dates, amPmConvert } from '../../helpers'
+
 import { RootContext } from '../../context'
 import { FlightCard } from '../molecules'
+
+const today = new Date()
 
 export default function ScheduleList() {
   const { savedFlights } = useContext(RootContext)
@@ -19,6 +23,8 @@ export default function ScheduleList() {
             flightNumber={flight.flightNumber}
             flightDate={flight.flightDate.toDateString()}
             isNotificationActive={flight.isActive}
+            isPassed={dates.compare(today, flight.flightDate)}
+            time={amPmConvert(flight.time)}
           />
         )
       })}
