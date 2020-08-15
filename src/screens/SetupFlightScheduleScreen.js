@@ -8,6 +8,7 @@ import {
 import {
   SchedulesList,
   FlightScheduleForm,
+  SetReminderForm,
   Header,
   SlidingPanel
 } from '../components/organisms'
@@ -20,7 +21,8 @@ export default class SetupFlightScheduleScreen extends React.Component {
       <View style={styles.container}>
         <Header deviceHeight={height} />
         <View style={styles.body}>
-          <FlightScheduleForm />
+          {/* <FlightScheduleForm /> */}
+          <SetReminderForm />
         </View>
         <SlidingPanel>
           <SchedulesList />
