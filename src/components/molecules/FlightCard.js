@@ -36,17 +36,18 @@ export default function FlightCard({
     Animated.parallel([
       Animated.timing(actionPosRef, {
         toValue: status === 'move' ? { x: 0, y: -2 } : { x: 0, y: -50 },
-        duration: 300,
+        duration: Platform.OS === 'android' ? 900 : 400,
         useNativeDriver: true
       }).start(),
       Animated.timing(actionDispRef, {
         toValue: status === 'move' ? 1 : 0,
-        duration: 400,
+        duration: Platform.OS === 'android' ? 900 : 400,
         useNativeDriver: true
       }).start(),
       Animated.timing(containerHeightRef, {
         toValue: status === 'move' ? 110 : 70,
-        duration: 400
+        duration: Platform.OS === 'android' ? 200 : 400,
+        useNativeDriver: false
       }).start()
     ])
   }
