@@ -14,7 +14,8 @@ const { height, width } = Dimensions.get('window')
 export default function Modal({
   children,
   isModalVisible,
-  onPressClose
+  onPressClose,
+  isModalWithoutCloser
 }) {
   return (
     <RNModal
@@ -25,16 +26,25 @@ export default function Modal({
         Alert.alert("Modal has been closed.");
       }}
     >
-      <View style={styles.centeredView}>
+      <View
+        style={[
+          styles.centeredView,
+          {
+            backgroundColor: isModalWithoutCloser ? 'rgba(255,255,255,0.01)' : 'rgba(0, 0, 0, 0.5)'
+          }
+        ]}
+      >
         <View style={styles.modalView}>
           {children}
-          <TouchableHighlight
-            onPress={onPressClose}
-            underlayColor='none'
-            style={styles.closeButton}
-          >
-            <Text style={styles.textClose}>Close</Text>
-          </TouchableHighlight>
+          {!isModalWithoutCloser && (
+            <TouchableHighlight
+              onPress={onPressClose}
+              underlayColor='none'
+              style={styles.closeButton}
+            >
+              <Text style={styles.textClose}>Close</Text>
+            </TouchableHighlight>
+          )}
         </View>
       </View>
     </RNModal>
@@ -47,7 +57,6 @@ const styles = StyleSheet.create({
     width,
     position: 'absolute',
     top: Platform.OS === 'ios' ? -22 : -20,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
