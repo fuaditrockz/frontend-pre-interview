@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import {
   View,
   Text,
   StyleSheet,
   Platform,
-  TouchableOpacity
+  TouchableOpacity,
+  Animated
 } from 'react-native'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
@@ -18,6 +19,38 @@ export default function FlightCard({
   isPassed,
   index
 }) {
+  const [isRenderMoreAction, setIsRenderMoreAction] = useState(false)
+  const actionPosRef = useRef(new Animated.ValueXY({x: 0, y: -50})).current
+  const actionDispRef = useRef(new Animated.Value(0)).current
+  const containerHeightRef = useRef(new Animated.Value(70)).current
+
+  useEffect(() => {
+    animatedShowMoreAction(`${isRenderMoreAction ? 'move' : 'back'}`)
+  }, [isRenderMoreAction])
+
+  const onPressCard = async () => {
+    setIsRenderMoreAction(!isRenderMoreAction)
+  }
+
+  const animatedShowMoreAction = status => {
+    Animated.parallel([
+      Animated.timing(actionPosRef, {
+        toValue: status === 'move' ? { x: 0, y: -2 } : { x: 0, y: -50 },
+        duration: 300,
+        useNativeDriver: true
+      }).start(),
+      Animated.timing(actionDispRef, {
+        toValue: status === 'move' ? 1 : 0,
+        duration: 400,
+        useNativeDriver: true
+      }).start(),
+      Animated.timing(containerHeightRef, {
+        toValue: status === 'move' ? 110 : 70,
+        duration: 400
+      }).start()
+    ])
+  }
+
   const renderLeft = () => {
     return (
       <View style={styles.iconLeft}>
@@ -71,32 +104,68 @@ export default function FlightCard({
       </View>
     )
   }
+
+  const renderMoreAction = () => {
+    return (
+      <Animated.View
+        style={[
+          styles.moreActionContainer,
+          {
+            opacity: actionDispRef,
+            zIndex: -1,
+            transform: [
+              { translateX: actionPosRef.x },
+              { translateY: actionPosRef.y }
+            ]
+          }
+        ]}
+      >
+        <TouchableOpacity>
+          <Text style={[styles.actionText, styles.regularTextColor]}>
+            See Details
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Text style={[styles.actionText, styles.warningTextColor]}>
+            Remove
+          </Text>
+        </TouchableOpacity>
+      </Animated.View>
+    )
+  }
+
   return (
-    <TouchableOpacity
-      style={[
-        styles.flightView,
-        {backgroundColor: checkIndexIsEven(index) ? (
-          isPassed === 1 ? 'rgba(72, 84, 96, 0.7)' : '#ef5777'
-        ) : (
-          isPassed === 1 ? 'rgba(128, 142, 155, 0.9)'  : '#575fcf'
-        )}
-      ]}
-      activeOpacity={0.8}
-    >
-      <>
-        {renderLeft()}
-        {renderCenter()}
-        {renderRight()}
-      </>
-    </TouchableOpacity>
+    <Animated.View style={[styles.container, { height: containerHeightRef }]}>
+       <TouchableOpacity
+        style={[
+          styles.flightView,
+          {backgroundColor: checkIndexIsEven(index) ? (
+            isPassed === 1 ? 'rgba(72, 84, 96, 0.7)' : '#ef5777'
+          ) : (
+            isPassed === 1 ? 'rgba(128, 142, 155, 0.9)'  : '#575fcf'
+          )}
+        ]}
+        activeOpacity={0.8}
+        onPress={onPressCard}
+      >
+        <>
+          {renderLeft()}
+          {renderCenter()}
+          {renderRight()}
+        </>
+      </TouchableOpacity>
+      {renderMoreAction()}
+    </Animated.View>
   )
 }
 
 const styles = StyleSheet.create({
+  container: {
+    marginBottom: 10
+  },
   flightView: {
     width: '100%',
     height: 70,
-    marginBottom: 10,
     paddingVertical: 10,
     paddingHorizontal: 10,
     borderRadius: 5,
@@ -134,5 +203,26 @@ const styles = StyleSheet.create({
   divider: {
     borderLeftColor: '#FFF',
     borderLeftWidth: 0.5
+  },
+  moreActionContainer: {
+    position: 'relative',
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: 'rgba(210, 218, 226,1.0)',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderBottomRightRadius: 5,
+    borderBottomLeftRadius: 5,
+    height: 40
+  },
+  warningTextColor: {
+    color: '#ff5e57'
+  },
+  regularTextColor: {
+    color: '#808e9b'
+  },
+  actionText: {
+    fontFamily: 'Poppins-Bold'
   }
 })
