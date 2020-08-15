@@ -13,20 +13,11 @@ export class RootContextProvider extends React.Component {
         statusBar: 'light-content',
         backgroundColor: '#3c40c6'
       },
-      savedFlights: [],
-      airlines: []
+      savedFlights: []
     }
 
     this.changeStatusBarTheme = this.changeStatusBarTheme.bind(this)
     this.saveFlight = this.saveFlight.bind(this)
-  }
-
-  async UNSAFE_componentWillMount() {
-    const airlinesData = airlines
-    const convertedJSONData = await JSON.parse(JSON.stringify(airlinesData))
-    this.setState({
-      airlines: [convertedJSONData.data]
-    })
   }
 
   changeStatusBarTheme(themeContent) {
