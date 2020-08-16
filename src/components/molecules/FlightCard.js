@@ -38,7 +38,8 @@ export default function FlightCard({
   const onPressSeeDetails = () => {
     navigation.navigate('ShowReminderDetails', {
       ...flightData,
-      flightDate: dates.convert(flightData.flightDate)
+      index,
+      isPassed
     })
   }
 

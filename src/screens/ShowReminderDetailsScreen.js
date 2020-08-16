@@ -7,9 +7,12 @@ import {
 import LinearGradient from 'react-native-linear-gradient'
 
 import { StatusBar } from '../components/atoms'
+import { ReminderDetails } from '../components/organisms'
 
 export default class ShowReminderDetailsScreen extends React.Component {
   render() {
+    const { params } = this.props.route
+    console.log(params)
     return (
       <LinearGradient
         start={{x: 0.0, y: 0.85}}
@@ -21,6 +24,7 @@ export default class ShowReminderDetailsScreen extends React.Component {
         <StatusBar />
         <View style={styles.container}>
           <View style={styles.body}>
+            <ReminderDetails data={params} />
           </View>
         </View>
       </LinearGradient>
@@ -31,9 +35,11 @@ export default class ShowReminderDetailsScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: '100%'
+    width: '100%',
+    paddingHorizontal: 10
   },
   body: {
-    paddingHorizontal: 20
+    width: '100%',
+    height: '100%'
   }
 })
