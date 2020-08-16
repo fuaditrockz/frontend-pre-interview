@@ -11,17 +11,21 @@ import SlidingUpPanel from 'rn-sliding-up-panel'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
 import { RootContext } from '../../context'
+import { TextLink } from '../atoms'
 
 const { height } = Dimensions.get('window')
 
 export default function SlidingPanel({
   children
 }) {
-  const { theme: { panelFullMode }, onSliderPanelFull, onSliderPanelDown } = useContext(RootContext)
+  const {
+    theme: { panelFullMode },
+    onSliderPanelFull,
+    onSliderPanelDown
+  } = useContext(RootContext)
   const [sliderRef, setSliderRef] = useState()
 
   const onSlidePanel = (posValue, gestureState) => {
-    console.log(posValue)
     if (posValue === height) {
       onSliderPanelFull()
     }
@@ -67,11 +71,10 @@ export default function SlidingPanel({
               paddingHorizontal: 10,
               marginBottom: 10
             }}>
-              <TouchableOpacity onPress={onPressSeeMore}>
-                <Text>
-                  See All Reminder
-                </Text>
-              </TouchableOpacity>
+              <TextLink
+                title='See Full'
+                onPressText={onPressSeeMore}
+              />
               <TouchableOpacity onPress={onPressCloseSlider}>
                 <Text>
                   Close

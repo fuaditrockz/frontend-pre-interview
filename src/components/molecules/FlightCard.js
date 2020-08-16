@@ -11,6 +11,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import { useNavigation } from '@react-navigation/native'
 
 import { checkIndexIsEven } from '../../helpers'
+import { TextLink } from '../atoms'
 
 export default function FlightCard({
   flightNumber,
@@ -123,16 +124,15 @@ export default function FlightCard({
           }
         ]}
       >
-        <TouchableOpacity onPress={() => navigation.navigate('ShowReminderDetails')}>
-          <Text style={[styles.actionText, styles.regularTextColor]}>
-            See Details
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Text style={[styles.actionText, styles.warningTextColor]}>
-            Remove
-          </Text>
-        </TouchableOpacity>
+        <TextLink
+          title='See Details'
+          onPressText={() => navigation.navigate('ShowReminderDetails')}
+        />
+        <TextLink
+          title='Remove'
+          onPressText={() => navigation.navigate('ShowReminderDetails')}
+          colorType='warning'
+        />
       </Animated.View>
     )
   }
@@ -218,14 +218,5 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 5,
     borderBottomLeftRadius: 5,
     height: 40
-  },
-  warningTextColor: {
-    color: '#ff5e57'
-  },
-  regularTextColor: {
-    color: '#808e9b'
-  },
-  actionText: {
-    fontFamily: 'Poppins-Bold'
   }
 })
