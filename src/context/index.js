@@ -1,6 +1,7 @@
 import React from 'react'
 
 import airlines from '../../assets/data/airlines.json'
+import { Platform } from 'react-native'
 
 export const RootContext = React.createContext()
 
@@ -18,17 +19,28 @@ export class RootContextProvider extends React.Component {
       currentScreen: ''
     }
 
-    this.onSliderChange = this.onSliderChange.bind(this)
+    this.onSliderPanelFull = this.onSliderPanelFull.bind(this)
+    this.onSliderPanelDown = this.onSliderPanelDown.bind(this)
     this.saveFlight = this.saveFlight.bind(this)
     this.changeCurrentScreenName = this.changeCurrentScreenName.bind(this)
   }
 
-  onSliderChange(themeContent) {
+  onSliderPanelFull() {
     this.setState({
       theme: {
-        statusBar: themeContent === 'full' ? 'dark-content' : 'light-content',
-        backgroundColor: themeContent === 'full' ? '#fff' : '#3c40c6',
-        panelFullMode: !this.state.theme.panelFullMode
+        statusBar: 'dark-content',
+        backgroundColor: '#fff',
+        panelFullMode: true
+      }
+    })
+  }
+
+  onSliderPanelDown() {
+    this.setState({
+      theme: {
+        statusBar: 'light-content',
+        backgroundColor: '#3c40c6',
+        panelFullMode: false
       }
     })
   }
@@ -50,12 +62,13 @@ export class RootContextProvider extends React.Component {
     const { state } = this
     console.log(state.theme.backgroundColor)
     console.log(state.savedFlights)
-    console.log(state.theme.panelFullMode)
+    console.log(state.theme.statusBar)
     return (
       <RootContext.Provider
         value={{
           ...state,
-          onSliderChange: this.onSliderChange,
+          onSliderPanelFull: this.onSliderPanelFull,
+          onSliderPanelDown: this.onSliderPanelDown,
           saveFlight: this.saveFlight,
           changeCurrentScreenName: this.changeCurrentScreenName
         }}

@@ -17,36 +17,33 @@ const { height } = Dimensions.get('window')
 export default function SlidingPanel({
   children
 }) {
-  const { theme: { panelFullMode }, onSliderChange } = useContext(RootContext)
-  const [isPanelFull, setIsPanelFull] = useState(false)
+  const { theme: { panelFullMode }, onSliderPanelFull, onSliderPanelDown } = useContext(RootContext)
   const [sliderRef, setSliderRef] = useState()
 
-  const onSlidePanel = (posValue, changeStatusBar) => {
+  const onSlidePanel = (posValue, gestureState) => {
+    console.log(posValue)
     if (posValue === height) {
-      changeStatusBar('full')
-      setIsPanelFull(!isPanelFull)
-    } else if (posValue === (Platform.OS === 'ios' ? 400 : 300)) {
-      changeStatusBar('down')
-      setIsPanelFull(!isPanelFull)
+      onSliderPanelFull()
     }
   }
 
   const onPressSeeMore = () => {
     sliderRef.show()
-    onSliderChange('full')
+    onSliderPanelFull()
   }
 
   const onPressCloseSlider = () => {
     sliderRef.hide()
-    onSliderChange('down')
+    onSliderPanelDown()
   }
 
   return (
     <SlidingUpPanel
       ref={c => setSliderRef(c)}
-      snappingPoints={[400, height]}
+      snappingPoints={[200, height]}
       draggableRange={{top: height, bottom: Platform.OS === 'ios' ? 400 : 400}}
-      onDragEnd={value => onSlidePanel(value, onSliderChange)}
+      onMomentumDragEnd={(value, gst) => onSlidePanel(value, gst)}
+      onMomentumDragStart={(v) => console.log('Drag End', v)}
     >
       {dragHandler => (
         <View style={styles.listSchedulesContainer}>
@@ -61,7 +58,7 @@ export default function SlidingPanel({
           </View>
           <View style={[
             styles.contentContainer,
-            { paddingTop: panelFullMode ? 30 : 10 }
+            { paddingTop: panelFullMode ? (Platform.OS === 'ios' ? 50 : 30) : 10 }
           ]}>
             <View style={{
               width: '100%',
