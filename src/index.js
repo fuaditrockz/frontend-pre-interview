@@ -1,32 +1,29 @@
 import React from 'react'
-import { StyleSheet, View, StatusBar } from 'react-native'
-import { NativeRouter, Route } from 'react-router-native'
-import LinearGradient from 'react-native-linear-gradient'
+import { StyleSheet, View } from 'react-native'
+import { NavigationContainer } from '@react-navigation/native'
+import { createStackNavigator } from '@react-navigation/stack'
 
-import { RootContextProvider, RootContextConsumer } from './context'
+const Stack = createStackNavigator()
 
-import SetupFlighScheduleScreen  from './screens/SetupFlightScheduleScreen'
+import { RootContextProvider } from './context'
+
+import SetupFlighScheduleScreen from './screens/SetupFlightScheduleScreen'
+import ShowReminderDetails from './screens/ShowReminderDetails'
 
 export default function App() {
   return (
-    <NativeRouter>
+    <NavigationContainer>
       <RootContextProvider>
-        <LinearGradient colors={['#3c40c6', '#575fcf']} style={styles.container}>
-            <RootContextConsumer>
-              {context => (
-                <StatusBar
-                  backgroundColor={context.theme.backgroundColor}
-                  barStyle={context.theme.statusBar}
-                />
-              )}
-            </RootContextConsumer>
-
-            <Route exact path="/" component={SetupFlighScheduleScreen} />
-            {/* <Route path="/about" component={About} />
-            <Route path="/topics" component={Topics} /> */}
-        </LinearGradient>
+        <Stack.Navigator
+          initialRouteName='SetupFlightSchedule'
+          screenOptions={{
+            headerShown: false
+          }}
+        >
+          <Stack.Screen name='SetupFlightSchedule' component={SetupFlighScheduleScreen} />
+        </Stack.Navigator>
       </RootContextProvider>
-    </NativeRouter>
+    </NavigationContainer>
   )
 }
 
