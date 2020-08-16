@@ -16,7 +16,7 @@ import { FlightCard } from '../molecules'
 const today = new Date()
 const { height } = Dimensions.get('window')
 
-export default function ScheduleList() {
+export default function RemindersList() {
   const { savedFlights, theme: { panelFullMode } } = useContext(RootContext)
   if (savedFlights.length === 0) {
     return (

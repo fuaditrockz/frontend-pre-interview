@@ -8,7 +8,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import { RootContext } from '../context'
 import { StatusBar } from '../components/atoms'
 import {
-  SchedulesList,
+  RemindersList,
   SetReminderForm,
   SlidingPanel
 } from '../components/organisms'
@@ -37,7 +37,7 @@ export default class HomeScreen extends React.Component {
             <SetReminderForm />
           </View>
           <SlidingPanel>
-            <SchedulesList />
+            <RemindersList />
           </SlidingPanel>
         </View>
       </LinearGradient>
