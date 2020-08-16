@@ -24,7 +24,7 @@ export default function ScheduleList() {
       <View style={{
         width: '100%',
         height: height - (panelFullMode ? 100 : (Platform.OS === 'ios' ? 60 : 90)),
-        paddingVertical: 20,
+        paddingVertical: 30,
         alignItems: 'center'
       }}>
         <Empty height={150} width={150} />
