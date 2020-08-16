@@ -13,7 +13,7 @@ import {
   SlidingPanel
 } from '../components/organisms'
 
-export default class SetupFlightScheduleScreen extends React.Component {
+export default class HomeScreen extends React.Component {
   static contextType = RootContext
 
   componentDidMount() {

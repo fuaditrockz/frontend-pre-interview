@@ -12,7 +12,7 @@ export default function Header({
   deviceHeight
 }) {
   const { currentScreen, theme: { panelFullMode } } = useContext(RootContext)
-  const sliderIsFullonRightScreen =  (currentScreen === 'SetupFlightSchedule') && panelFullMode
+  const sliderIsFullonRightScreen =  (currentScreen === 'Home') && panelFullMode
   return (
     <View
       style={[

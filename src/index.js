@@ -7,9 +7,8 @@ const Stack = createStackNavigator()
 
 import { RootContextProvider } from './context'
 import { Header } from './components/organisms'
-import SetupFlighScheduleScreen from './screens/SetupFlightScheduleScreen'
+import HomeScreen from './screens/HomeScreen'
 import ShowReminderDetailsScreen from './screens/ShowReminderDetailsScreen'
-import { SafeAreaView } from 'react-native-safe-area-context'
 
 const { height } = Dimensions.get('window')
 
@@ -19,16 +18,19 @@ export default function App() {
       <RootContextProvider>
         <Header deviceHeight={height} />
         <Stack.Navigator
-          initialRouteName='SetupFlightSchedule'
+          initialRouteName='Home'
           screenOptions={{
             headerShown: false
           }}
         >
           <Stack.Screen
-            name='SetupFlightSchedule'
-            component={SetupFlighScheduleScreen}
+            name='Home'
+            component={HomeScreen}
           />
-          <Stack.Screen name='ShowReminderDetails' component={ShowReminderDetailsScreen} />
+          <Stack.Screen
+            name='ShowReminderDetails'
+            component={ShowReminderDetailsScreen}
+          />
         </Stack.Navigator>
       </RootContextProvider>
     </NavigationContainer>
