@@ -7,6 +7,7 @@ import {
 } from 'react-native'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5'
+import shortid from 'shortid'
 import airlinesJSON from '../../../assets/data//airlines.json'
 
 import { formatDate } from '../../helpers'
@@ -113,6 +114,7 @@ export default function FlightScheduleForm({}) {
       setIsError(true)
     } else {
       saveFlight({
+        id: shortid.generate(),
         flightNumber: inputFLNumber,
         flightDate: inputFLDate,
         ...finalFlightDetails,
