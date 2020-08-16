@@ -126,7 +126,7 @@ export default function FlightScheduleForm({}) {
   console.log(savedFlights)
 
   return (
-    <View>
+    <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>
           Set Flight Reminder
@@ -179,6 +179,9 @@ export default function FlightScheduleForm({}) {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    paddingTop: 20
+  },
   header: {
     marginBottom: 20
   },

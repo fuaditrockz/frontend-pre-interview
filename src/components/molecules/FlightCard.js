@@ -8,6 +8,7 @@ import {
   Animated
 } from 'react-native'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
+import { useNavigation } from '@react-navigation/native'
 
 import { checkIndexIsEven } from '../../helpers'
 
@@ -19,6 +20,7 @@ export default function FlightCard({
   isPassed,
   index
 }) {
+  const navigation = useNavigation()
   const [isRenderMoreAction, setIsRenderMoreAction] = useState(false)
   const actionPosRef = useRef(new Animated.ValueXY({x: 0, y: -50})).current
   const actionDispRef = useRef(new Animated.Value(0)).current
@@ -36,17 +38,17 @@ export default function FlightCard({
     Animated.parallel([
       Animated.timing(actionPosRef, {
         toValue: status === 'move' ? { x: 0, y: -2 } : { x: 0, y: -50 },
-        duration: Platform.OS === 'android' ? 900 : 400,
+        duration: Platform.OS === 'android' ? 600 : 400,
         useNativeDriver: true
       }).start(),
       Animated.timing(actionDispRef, {
         toValue: status === 'move' ? 1 : 0,
-        duration: Platform.OS === 'android' ? 900 : 400,
+        duration: Platform.OS === 'android' ? 600 : 400,
         useNativeDriver: true
       }).start(),
       Animated.timing(containerHeightRef, {
         toValue: status === 'move' ? 110 : 70,
-        duration: Platform.OS === 'android' ? 200 : 400,
+        duration: Platform.OS === 'android' ? 50 : 400,
         useNativeDriver: false
       }).start()
     ])
@@ -121,7 +123,7 @@ export default function FlightCard({
           }
         ]}
       >
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('ShowReminderDetails')}>
           <Text style={[styles.actionText, styles.regularTextColor]}>
             See Details
           </Text>

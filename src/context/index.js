@@ -11,21 +11,31 @@ export class RootContextProvider extends React.Component {
     this.state = {
       theme: {
         statusBar: 'light-content',
-        backgroundColor: '#3c40c6'
+        backgroundColor: '#3c40c6',
+        panelFullMode: false
       },
-      savedFlights: []
+      savedFlights: [],
+      currentScreen: ''
     }
 
-    this.changeStatusBarTheme = this.changeStatusBarTheme.bind(this)
+    this.onSliderChange = this.onSliderChange.bind(this)
     this.saveFlight = this.saveFlight.bind(this)
+    this.changeCurrentScreenName = this.changeCurrentScreenName.bind(this)
   }
 
-  changeStatusBarTheme(themeContent) {
+  onSliderChange(themeContent) {
     this.setState({
       theme: {
-        statusBar: themeContent === 'light-content' ? 'dark-content' : 'light-content',
-        backgroundColor: themeContent === 'light-content' ? '#fff' : '#3c40c6'
+        statusBar: themeContent === 'full' ? 'dark-content' : 'light-content',
+        backgroundColor: themeContent === 'full' ? '#fff' : '#3c40c6',
+        panelFullMode: !this.state.theme.panelFullMode
       }
+    })
+  }
+
+  changeCurrentScreenName(scrName) {
+    this.setState({
+      currentScreen: scrName
     })
   }
 
@@ -40,12 +50,14 @@ export class RootContextProvider extends React.Component {
     const { state } = this
     console.log(state.theme.backgroundColor)
     console.log(state.savedFlights)
+    console.log(state.theme.panelFullMode)
     return (
       <RootContext.Provider
         value={{
           ...state,
-          changeStatusBarTheme: this.changeStatusBarTheme,
-          saveFlight: this.saveFlight
+          onSliderChange: this.onSliderChange,
+          saveFlight: this.saveFlight,
+          changeCurrentScreenName: this.changeCurrentScreenName
         }}
       >
         {this.props.children}
