@@ -43,13 +43,10 @@ export default function ScheduleList() {
           return (
             <FlightCard
               index={index}
-              id={flight.id}
+              flightData={flight}
               key={index}
-              flightNumber={flight.flightNumber}
-              flightDate={flight.flightDate.toDateString()}
               isNotificationActive={flight.isActive}
               isPassed={dates.compare(today, flight.flightDate)}
-              time={amPmConvert(flight.time)}
             />
           )
       })}

@@ -11,14 +11,11 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import { useNavigation } from '@react-navigation/native'
 
 import { RootContext } from '../../context'
-import { checkIndexIsEven } from '../../helpers'
+import { checkIndexIsEven, amPmConvert, dates } from '../../helpers'
 import { TextLink } from '../atoms'
 
 export default function FlightCard({
-  id,
-  flightNumber,
-  flightDate,
-  time,
+  flightData,
   isNotificationActive,
   isPassed,
   index
@@ -36,6 +33,13 @@ export default function FlightCard({
 
   const onPressCard = async () => {
     setIsRenderMoreAction(!isRenderMoreAction)
+  }
+
+  const onPressSeeDetails = () => {
+    navigation.navigate('ShowReminderDetails', {
+      ...flightData,
+      flightDate: dates.convert(flightData.flightDate)
+    })
   }
 
   const animatedShowMoreAction = status => {
@@ -76,11 +80,11 @@ export default function FlightCard({
         <Text
           style={styles.flightNumber}
         >
-          {flightNumber}
+          {flightData.flightNumber}
         </Text>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <Text style={styles.flightDate}>
-            {time}, {flightDate}
+            {amPmConvert(flightData.time)}, {flightData.flightDate.toDateString()}
           </Text>
           <View style={{ flexDirection: 'row' }}>
             {isPassed === 1 && (
@@ -129,11 +133,11 @@ export default function FlightCard({
       >
         <TextLink
           title='See Details'
-          onPressText={() => navigation.navigate('ShowReminderDetails')}
+          onPressText={onPressSeeDetails}
         />
         <TextLink
           title='Remove'
-          onPressText={() => removeFlight(id)}
+          onPressText={() => removeFlight(flightData.id)}
           colorType='warning'
         />
       </Animated.View>
