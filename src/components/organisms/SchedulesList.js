@@ -43,6 +43,7 @@ export default function ScheduleList() {
           return (
             <FlightCard
               index={index}
+              id={flight.id}
               key={index}
               flightNumber={flight.flightNumber}
               flightDate={flight.flightDate.toDateString()}

@@ -19,6 +19,7 @@ export class RootContextProvider extends React.Component {
     this.onSliderPanelFull = this.onSliderPanelFull.bind(this)
     this.onSliderPanelDown = this.onSliderPanelDown.bind(this)
     this.saveFlight = this.saveFlight.bind(this)
+    this.removeFlight = this.removeFlight.bind(this)
     this.changeCurrentScreenName = this.changeCurrentScreenName.bind(this)
   }
 
@@ -55,6 +56,15 @@ export class RootContextProvider extends React.Component {
     })
   }
 
+  removeFlight(id) {
+    const { savedFlights } = this.state
+    this.setState({
+      savedFlights: savedFlights.filter(flight => {
+        return flight.id !== id
+      })
+    })
+  }
+
   render() {
     const { state } = this
     console.log(state.theme.backgroundColor)
@@ -67,6 +77,7 @@ export class RootContextProvider extends React.Component {
           onSliderPanelFull: this.onSliderPanelFull,
           onSliderPanelDown: this.onSliderPanelDown,
           saveFlight: this.saveFlight,
+          removeFlight: this.removeFlight,
           changeCurrentScreenName: this.changeCurrentScreenName
         }}
       >

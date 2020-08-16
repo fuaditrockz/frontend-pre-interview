@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, useContext } from 'react'
 import {
   View,
   Text,
@@ -10,10 +10,12 @@ import {
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import { useNavigation } from '@react-navigation/native'
 
+import { RootContext } from '../../context'
 import { checkIndexIsEven } from '../../helpers'
 import { TextLink } from '../atoms'
 
 export default function FlightCard({
+  id,
   flightNumber,
   flightDate,
   time,
@@ -21,6 +23,7 @@ export default function FlightCard({
   isPassed,
   index
 }) {
+  const { removeFlight  } = useContext(RootContext)
   const navigation = useNavigation()
   const [isRenderMoreAction, setIsRenderMoreAction] = useState(false)
   const actionPosRef = useRef(new Animated.ValueXY({x: 0, y: -50})).current
@@ -130,7 +133,7 @@ export default function FlightCard({
         />
         <TextLink
           title='Remove'
-          onPressText={() => navigation.navigate('ShowReminderDetails')}
+          onPressText={() => removeFlight(id)}
           colorType='warning'
         />
       </Animated.View>
