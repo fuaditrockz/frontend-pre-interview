@@ -11,7 +11,7 @@ import SlidingUpPanel from 'rn-sliding-up-panel'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
 import { RootContext } from '../../context'
-import { TextLink } from '../atoms'
+import { TextLink, ButtonRounded } from '../atoms'
 
 const { height } = Dimensions.get('window')
 
@@ -64,24 +64,22 @@ export default function SlidingPanel({
             styles.contentContainer,
             { paddingTop: panelFullMode ? (Platform.OS === 'ios' ? 50 : 30) : 10 }
           ]}>
-            <View style={{
-              width: '100%',
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              paddingHorizontal: 10,
-              marginBottom: 10
-            }}>
+            <View style={styles.headerContainer}>
               <TextLink
-                title='See Full'
+                title={!panelFullMode ? 'See Full List' : `Your Reminder List`}
                 onPressText={onPressSeeMore}
+                size='big'
+                isDisabled={panelFullMode}
               />
-              <TouchableOpacity onPress={onPressCloseSlider}>
-                <Text>
-                  Close
-                </Text>
-              </TouchableOpacity>
             </View>
             {children}
+            <View style={styles.footerContainer}>
+              <ButtonRounded
+                title='Close'
+                onPressButton={onPressCloseSlider}
+                color='warning'
+              />
+            </View>
           </View>
         </View>
       )}
@@ -125,5 +123,19 @@ const styles = StyleSheet.create({
     height: Platform.OS === 'ios' ? '100%' : '100%',
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  headerContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    paddingHorizontal: 10,
+    marginBottom: 10
+  },
+  footerContainer: {
+    position: 'absolute',
+    bottom: Platform.OS === 'ios' ? 80 : 40,
+    width: '100%',
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 })
