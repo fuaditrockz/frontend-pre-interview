@@ -8,15 +8,12 @@ import LinearGradient from 'react-native-linear-gradient'
 
 import { StatusBar } from '../components/atoms'
 import {
-  SchedulesList,
-  SetReminderForm,
-  Header,
-  SlidingPanel
+  Header
 } from '../components/organisms'
 
 const { height } = Dimensions.get('window')
 
-export default class SetupFlightScheduleScreen extends React.Component {
+export default class ShowReminderDetailsScreen extends React.Component {
   render() {
     return (
       <LinearGradient colors={['#3c40c6', '#575fcf']} style={styles.container}>
@@ -24,11 +21,8 @@ export default class SetupFlightScheduleScreen extends React.Component {
         <View style={styles.container}>
           <Header deviceHeight={height} />
           <View style={styles.body}>
-            <SetReminderForm />
+            
           </View>
-          <SlidingPanel>
-            <SchedulesList />
-          </SlidingPanel>
         </View>
       </LinearGradient>
     )
