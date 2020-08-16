@@ -3,9 +3,7 @@ import {
   View,
   Platform,
   StyleSheet,
-  Dimensions,
-  Text,
-  TouchableOpacity
+  Dimensions
 } from 'react-native'
 import SlidingUpPanel from 'rn-sliding-up-panel'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'

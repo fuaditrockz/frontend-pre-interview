@@ -1,8 +1,5 @@
 import React from 'react'
 
-import airlines from '../../assets/data/airlines.json'
-import { Platform } from 'react-native'
-
 export const RootContext = React.createContext()
 
 export class RootContextProvider extends React.Component {

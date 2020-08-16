@@ -1,7 +1,6 @@
 import React, { useContext } from "react"
 import {
   View,
-  Text,
   StyleSheet,
   Platform
 } from 'react-native'
