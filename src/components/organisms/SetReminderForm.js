@@ -8,13 +8,15 @@ import {
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5'
 import shortid from 'shortid'
-import airlinesJSON from '../../../assets/data//airlines.json'
 
-import { formatDate } from '../../helpers'
+import {
+  PromiseKit,
+  getHKAirportData,
+  getAirlineData,
+  getDestinationData
+} from '../../helpers'
 import { RootContext } from '../../context'
 import { Input, Button, Modal } from '../atoms'
-
-const todayDate = new Date()
 
 export default function FlightScheduleForm({}) {
   const { savedFlights, saveFlight } = useContext(RootContext)
@@ -22,82 +24,97 @@ export default function FlightScheduleForm({}) {
   // INPUT STATE
   const [inputFLNumber, setInputFLNumber] = useState('')
   const [inputFLDate, setInputFLDate] = useState(new Date())
-  const [airlineCode, setAirlineCode] = useState('')
-
-  // VENDOR DATA
-  const [flightAPIData, setFlightAPIData] = useState([])
-  const [airlines] = useState(JSON.parse(JSON.stringify(airlinesJSON)).data)
-
-  // FINAL DATA
-  const [finalFlightDetails, setFinalFlightDetails] = useState()
-  const [finalAirlineDetails, setFinalAirlineDetails] = useState()
 
   // UTILITIES
   const [isError, setIsError] = useState(false)
 
-  useEffect(() => {
-    const fetchFlightAPIData = async () => {
-      const stateDate = formatDate(inputFLDate.toDateString())
-      const today = formatDate(todayDate.toDateString())
-      const url = `https://www.hongkongairport.com/flightinfo-rest/rest/flights/past?date=${stateDate}&lang=en&cargo=false&arrival=false`
+  const saveReminder = PromiseKit({
+    data: {
+      inputFLNumber,
+      inputFLDate
+    },
+    errorMessage: 'Has no flight number or flight date'
+  })
 
-      try {
-        const response = await fetch(url)
-        const data = await response.json()
+  const onPressSetReminder = () => {
+    saveReminder
+      .then(async res => {
+        const HKAirportData = await getHKAirportData(res.inputFLDate)
+        let fixedData
 
-        if (stateDate === today) {
-          console.log(data)
-          setFlightAPIData(data[1].list)
-          matchingLocalFLNumberToFLAPIData(data[1].list)
+        HKAirportData.filter((item) => {
+          item.flight.map((fl,index) => {
+            if (fl.no === res.inputFLNumber) {
+              console.log(item.destination)
+              fixedData = {
+                flightNumber: res.inputFLNumber,
+                flightDate: res.inputFLDate,
+                ...item,
+                airlineCode: fl.airline
+              }
+            }
+          })
+        })
+
+        if (fixedData) {
+          delete Object.assign(fixedData, {['anotherFlights']: fixedData['flight'] })['flight']
+
+          const thisAirlineIndex = fixedData.anotherFlights.findIndex(arl => arl.no === res.inputFLNumber)
+          console.log(thisAirlineIndex)
+          if (thisAirlineIndex > -1) {
+            fixedData.anotherFlights.splice(thisAirlineIndex, 1) 
+          } 
         } else {
-          console.log(data)
-          setFlightAPIData(data[0].list)
-          matchingLocalFLNumberToFLAPIData(data[0].list)
+          throw new Error('Flight number not found')
         }
-      } catch (error) {
-        console.log(error)
-      }
-    }
 
-    fetchFlightAPIData()
-  }, [inputFLDate])
-
-  useEffect(() => {
-    matchingLocalFLNumberToFLAPIData(flightAPIData)
-  }, [inputFLNumber, inputFLDate])
-
-  useEffect(() => {
-    matchingAirlineCodeToAirlinesAPI(airlineCode)
-  }, [airlineCode])
-
-  const matchingLocalFLNumberToFLAPIData = data => {
-    setFinalFlightDetails(null)
-    const fetchedData = data
-    console.log('matchingLocalFLNumberToFLAPIData', fetchedData)
-    const matchedData = fetchedData.filter((item) => {
-      item.flight.map((fl, index) => {
-        /* console.log(index, fl) */
-        if (fl.no === inputFLNumber) {
-          setFinalFlightDetails(item)
-          setAirlineCode(fl.airline)
+        return fixedData
+      })
+      .then(res => {
+        console.log('SUCCESS - HK AIRPORT DATA', res)
+        let fixedData
+        if (res) {
+          const airlineData = getAirlineData(res.airlineCode)
+          fixedData = {
+            ...res,
+            airlineDetails: {...airlineData[0]}
+          }
+          return fixedData 
         }
       })
-    })
-    console.log('matchedData', matchedData)
-    return matchedData
-  }
-
-  const matchingAirlineCodeToAirlinesAPI = code => {
-    setFinalAirlineDetails(null)
-    const matchedData = airlines.filter(arl => {
-      return arl.icao_code == code
-    })
-    setFinalAirlineDetails(matchedData)
+      .then(async res => {
+        console.log('SUCCESS - AIRLINE DATA', res)
+        let fixedData = {}
+        let destinations = []
+        if (res) {
+          const responseDestination = res.destination
+          await responseDestination.map(dest => {
+            getDestinationData(dest).then(d => {
+              destinations.push(d)
+            })
+          })
+        }
+        return fixedData = {
+          ...res,
+          destinations: destinations
+        }
+      })
+      .then(res => {
+        console.log('SUCCESS - DESTINATION DATA', res)
+        saveFlight({
+          id: shortid.generate(),
+          ...res
+        })
+        eraseAllStateValues()
+      })
+      .catch(err => {
+        setIsError(true)
+        console.log(err)
+      })
   }
 
   const onChangeFlightNumberInput = flNumber => {
     setInputFLNumber(flNumber)
-    setFinalFlightDetails(null)
   }
 
   const onChangeFlightDateInput = (date) => {
@@ -109,23 +126,7 @@ export default function FlightScheduleForm({}) {
     setInputFLNumber('')
   }
 
-  const setReminder = () => {
-    if (!finalFlightDetails) {
-      setIsError(true)
-    } else {
-      saveFlight({
-        id: shortid.generate(),
-        flightNumber: inputFLNumber,
-        flightDate: inputFLDate,
-        ...finalFlightDetails,
-        airlineDetails: {...finalAirlineDetails[0]},
-        isActive: true
-      })
-      eraseAllStateValues()
-    }
-  }
-
-  console.log(savedFlights)
+  console.log('SAVED FLIGHTS REMINDER', savedFlights)
 
   return (
     <View style={styles.container}>
@@ -148,7 +149,6 @@ export default function FlightScheduleForm({}) {
         label='Flight Number'
         inputValue={inputFLNumber}
         onChangeValue={onChangeFlightNumberInput}
-        isDisabled={!flightAPIData}
       >
         <FontAwesomeIcon name="passport" size={15} color='#fff' />
       </Input>
@@ -156,7 +156,7 @@ export default function FlightScheduleForm({}) {
         title='SET REMINDER'
         isHaveIcon
         iconName='notifications'
-        onPressButton={setReminder}
+        onPressButton={onPressSetReminder}
         isDisabled={!inputFLNumber ? true : false}
       />
       <Modal

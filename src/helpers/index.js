@@ -1,3 +1,59 @@
+import Promise from 'bluebird'
+import airlinesJSON from '../../assets/data/airlines.json'
+
+const airlines = JSON.parse(JSON.stringify(airlinesJSON)).data
+const todayDate = new Date()
+
+export function PromiseKit({
+  data,
+  errorMessage
+}) {
+  return new Promise((resolve, reject) => {
+    if (data) {
+      resolve(data)
+    } else {
+      reject(new Error(errorMessage))
+    }
+  })
+}
+
+export const getHKAirportData = async date => {
+  const stateDate = formatDate(date.toDateString())
+  const today = formatDate(todayDate.toDateString())
+  const url = `https://www.hongkongairport.com/flightinfo-rest/rest/flights/past?date=${stateDate}&lang=en&cargo=false&arrival=false`
+
+  try {
+    const HKApiResponse = await fetch(url)
+    const jsonData = await HKApiResponse.json()
+    return PromiseKit({
+      data: stateDate === today ? jsonData[1].list : jsonData[0].list,
+      errorMessage: 'https://www.hongkongairport.com was failed to fetch'
+    })
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+export const getAirlineData = code => {
+  const matchedData = airlines.filter(arl => {
+    return arl.icao_code == code
+  })
+
+  return matchedData
+}
+
+export const getDestinationData = async code => {
+  const url = `https://api.flightstats.com/flex/airports/rest/v1/json/iata/${code}?appId=1325dd17&appKey=563dbeacb54a6c8a49438c0ad557b4a8`
+
+  try {
+    const flightStatsAPIResponse = await fetch(url)
+    const jsonData = await flightStatsAPIResponse.json()
+    return jsonData.airports[0]
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
 export function formatDate(date) {
   var d = new Date(date),
       month = '' + (d.getMonth() + 1),
