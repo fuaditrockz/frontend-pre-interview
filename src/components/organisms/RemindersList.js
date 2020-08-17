@@ -9,7 +9,7 @@ import {
 } from 'react-native'
 import Empty from '../../../assets/icons/empty.svg'
 
-import { dates, amPmConvert } from '../../helpers'
+import { dates } from '../../helpers'
 import { RootContext } from '../../context'
 import { FlightCard } from '../molecules'
 
