@@ -113,11 +113,8 @@ export default function ReminderDetails({
       city: 'Chek Lap Kok',
       countryName: 'Hong Kong',
       countryCode: 'HKG'
-    })
-    data.destinations.map(dest => {
-      allDestinations.push(dest)
-    })
-    console.log(allDestinations)
+    }, data.flightDestination)
+    console.log('ALL DESTINATIONS', allDestinations)
     return (
       <DetailsCard
         data={allDestinations}

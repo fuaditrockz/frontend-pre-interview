@@ -26,6 +26,9 @@ export default function FlightScheduleForm({}) {
   const [inputFLNumber, setInputFLNumber] = useState('')
   const [inputFLDate, setInputFLDate] = useState(new Date())
 
+  // DATA TEMPORARY STATE
+  const [flightDestination, setFlightDestination] = useState()
+
   // UTILITIES
   const [isError, setIsError] = useState(false)
 
@@ -85,19 +88,18 @@ export default function FlightScheduleForm({}) {
       })
       .then(async res => {
         console.log('SUCCESS - AIRLINE DATA', res)
-        let fixedData = {}
-        let destinations = []
-        if (res) {
-          const responseDestination = res.destination
-          await responseDestination.map(dest => {
-            getDestinationData(dest).then(d => {
-              destinations.push(d)
-            }).catch(err => console.log(err))
-          })
+        let fixedData = {
+          ...res
         }
-        return fixedData = {
-          ...res,
-          destinations: destinations
+
+        try {
+          await getDestinationData(res.destination[0]).then(d => {
+            fixedData.flightDestination = { ...d }
+          })
+  
+          return fixedData
+        } catch (error) {
+          console.log(error)
         }
       })
       .then(res => {
@@ -128,8 +130,7 @@ export default function FlightScheduleForm({}) {
     Keyboard.dismiss()
   }
 
-  console.log('SAVED FLIGHTS REMINDER', savedFlights)
-
+  console.log('ALL SAVED DATA', savedFlights)
   return (
     <View style={styles.container}>
       <View style={styles.header}>

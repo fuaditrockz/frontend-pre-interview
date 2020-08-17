@@ -1,4 +1,5 @@
 import React from 'react'
+import { AsyncStorage } from 'react-native'
 
 export const RootContext = React.createContext()
 
@@ -21,6 +22,23 @@ export class RootContextProvider extends React.Component {
     this.saveFlight = this.saveFlight.bind(this)
     this.removeFlight = this.removeFlight.bind(this)
     this.changeCurrentScreenName = this.changeCurrentScreenName.bind(this)
+  }
+
+  componentDidMount() {
+    /* AsyncStorage.removeItem('savedFlights') */
+    AsyncStorage.getItem('savedFlights', (err, res) => {
+      if (res) {
+        console.log('LOCAL STORAGE', JSON.parse(res))
+        JSON.parse(res).map((data) => {
+          data.flightDate = new Date(data.flightDate)
+          this.setState({
+            savedFlights: [ ...this.state.savedFlights, data ]
+          })
+        })
+      } else {
+        console.log(err)
+      }
+    })
   }
 
   onSliderPanelFull() {
@@ -49,11 +67,18 @@ export class RootContextProvider extends React.Component {
     })
   }
 
-  saveFlight(flight) {
+  async saveFlight(flight) {
     const { savedFlights } = this.state
     this.setState({
       savedFlights: [...savedFlights, flight]
     })
+    AsyncStorage.getItem('savedFlights')
+      .then((flights) => {
+        const fl = flights ? JSON.parse(flights) : [];
+        fl.flightDate && fl.flightDate.toString()
+        fl.push(flight);
+        AsyncStorage.setItem('savedFlights', JSON.stringify(fl));
+      })
   }
 
   removeFlight(id) {
@@ -63,6 +88,15 @@ export class RootContextProvider extends React.Component {
         return flight.id !== id
       })
     })
+    AsyncStorage.getItem('savedFlights')
+      .then((flights) => {
+        if (flights) {
+          const localStorageData = JSON.parse(flights)
+          const flightIndex = localStorageData.findIndex(x => x.id === id)
+          localStorageData.splice(flightIndex, 1)
+          AsyncStorage.setItem('savedFlights', JSON.stringify(localStorageData))
+        }
+      })
   }
 
   render() {
