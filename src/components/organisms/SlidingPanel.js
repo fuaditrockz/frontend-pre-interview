@@ -19,7 +19,8 @@ export default function SlidingPanel({
   const {
     theme: { panelFullMode },
     onSliderPanelFull,
-    onSliderPanelDown
+    onSliderPanelDown,
+    savedFlights
   } = useContext(RootContext)
   const [sliderRef, setSliderRef] = useState()
 
@@ -64,7 +65,7 @@ export default function SlidingPanel({
           ]}>
             <View style={styles.headerContainer}>
               <TextLink
-                title={!panelFullMode ? 'See Full List' : `Your Reminder List`}
+                title={!panelFullMode ? 'See Full List' : `Your Reminder List (${savedFlights.length})`}
                 onPressText={onPressSeeMore}
                 size='big'
                 isDisabled={panelFullMode}
