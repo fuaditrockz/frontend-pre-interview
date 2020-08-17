@@ -3,7 +3,8 @@ import {
   View,
   Text,
   StyleSheet,
-  Image
+  Image,
+  Keyboard
 } from 'react-native'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5'
@@ -91,7 +92,7 @@ export default function FlightScheduleForm({}) {
           await responseDestination.map(dest => {
             getDestinationData(dest).then(d => {
               destinations.push(d)
-            })
+            }).catch(err => console.log(err))
           })
         }
         return fixedData = {
@@ -124,6 +125,7 @@ export default function FlightScheduleForm({}) {
   const eraseAllStateValues = () => {
     setInputFLDate(new Date())
     setInputFLNumber('')
+    Keyboard.dismiss()
   }
 
   console.log('SAVED FLIGHTS REMINDER', savedFlights)
