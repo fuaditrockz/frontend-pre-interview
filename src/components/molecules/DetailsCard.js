@@ -13,7 +13,8 @@ export default function DetailsCard({
   airlineName,
   isPassed,
   isHaveHeader,
-  headerColor
+  headerColor,
+  isDestinationsCard
 }) {
   const renderHeader = () => {
     return (
@@ -49,16 +50,69 @@ export default function DetailsCard({
     return data.map((d, index) => (
       <View style={styles.content} key={index}>
         <Text style={styles.labelText}>{d.label}</Text>
-        <Text style={styles.regularText}>{d.content}</Text>
+        <Text style={styles.regularText}>{d.content || 'Not found'}</Text>
       </View>
     ))
+  }
+
+  const renderDestinations = () => {
+    return (
+      <View style={{
+        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        flexWrap: 'wrap',
+        marginTop: 10,
+        marginBottom: 10
+      }}>
+        {data.map((d, index) => (
+          <View
+            style={{
+              alignItems: 'center',
+              width: 100
+            }}
+            key={index}
+          >
+            <View style={[
+              styles.contentForDestinations,
+              {
+                backgroundColor: headerColor,
+              }
+            ]}>
+              <Text style={[styles.fontWhite, styles.miniText]}>{d.iata}</Text>
+            </View>
+            <Text style={[
+              styles.miniText,
+              {
+                textAlign: 'center',
+                lineHeight: 14
+              }
+            ]}>{d.name}</Text>
+          </View>
+        ))}
+      </View>
+    )
   }
 
   return (
     <View style={styles.card}>
       {isHaveHeader && renderHeader()}
-      <View style={styles.body}>
-        {renderAllContents()}
+      <View style={isDestinationsCard ? styles.bodyDestination : styles.body}>
+        {isDestinationsCard && (
+          <>
+            <Text style={styles.regularText}>Destination Details</Text>
+            <View
+              style={{
+                position: "relative",
+                bottom: -30,
+                borderBottomColor: headerColor,
+                borderBottomWidth: 3,
+                width: 200
+              }}
+            />
+          </>
+        )}
+        {isDestinationsCard ? renderDestinations() : renderAllContents()}
       </View>
     </View>
   )
@@ -97,6 +151,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     flexDirection: 'row',
     justifyContent: 'space-between'
+  },
+  bodyDestination: {
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 10
+  },
+  contentForDestinations: {
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 100,
+    marginBottom: 10
   },
   content: {
     marginBottom: 10,

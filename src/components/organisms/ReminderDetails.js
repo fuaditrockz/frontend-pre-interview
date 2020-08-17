@@ -26,7 +26,7 @@ export default function ReminderDetails({
         content: data.flightDate.toDateString()
       },
       {
-        label: 'Timme',
+        label: 'Time',
         content: amPmConvert(data.time)
       },
       {
@@ -91,7 +91,7 @@ export default function ReminderDetails({
         content: data.airlineDetails.country_name
       },
       {
-        label: 'Call Signn',
+        label: 'Call Sign',
         content: data.airlineDetails.callsign
       },
       {
@@ -104,9 +104,33 @@ export default function ReminderDetails({
     )
   }
 
+  const renderDestinationsDetails = () => {
+    let allDestinations = []
+    allDestinations.push({
+      iata: 'HKG',
+      name: 'Hong Kong - International Airport',
+      street1: '1 Sky Plaza Rd, Chek Lap Kok, Hong Kong',
+      city: 'Chek Lap Kok',
+      countryName: 'Hong Kong',
+      countryCode: 'HKG'
+    })
+    data.destinations.map(dest => {
+      allDestinations.push(dest)
+    })
+    console.log(allDestinations)
+    return (
+      <DetailsCard
+        data={allDestinations}
+        isDestinationsCard
+        headerColor={getHeaderColor()}
+      />
+    )
+  }
+
   return (
     <ScrollView style={styles.container}>
       {renderMainDetails()}
+      {renderDestinationsDetails()}
       {renderLocationDetails()}
       {renderAirlineDetails()}
     </ScrollView>
