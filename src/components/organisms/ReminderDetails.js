@@ -12,9 +12,9 @@ export default function ReminderDetails({
 }) {
   const getHeaderColor = () => {
     return checkIndexIsEven(data.index) ? (
-      data.isPassed === 1 ? 'rgba(72, 84, 96, 0.7)' : '#ef5777'
+      data.isPassed === 1 ? 'rgba(72, 84, 96, 1)' : '#ef5777'
     ) : (
-      data.isPassed === 1 ? 'rgba(128, 142, 155, 0.9)'  : '#575fcf'
+      data.isPassed === 1 ? 'rgba(128, 142, 155, 1)'  : '#575fcf'
     )
   }
 
