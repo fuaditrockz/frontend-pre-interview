@@ -20,19 +20,43 @@ import {
 import { RootContext } from '../../context'
 import { Input, Button, Modal } from '../atoms'
 
+const test = {
+  "color": null, 
+  "data": {}, 
+  "finish": [Function], 
+  "foreground": true, 
+  "id": "680299048", 
+  "message": "Test notification from Firebase.", 
+  "sound": "default", 
+  "title": "Test", 
+  "userInteraction": false
+}
+
 export default function FlightScheduleForm({}) {
   const { savedFlights, saveFlight } = useContext(RootContext)
-  const notification = new NotificationService()
+  const notification = new NotificationService(
+    null,
+    notif => setRemoteNotification(notif)
+  )
 
   // INPUT STATE
   const [inputFLNumber, setInputFLNumber] = useState('')
   const [inputFLDate, setInputFLDate] = useState(new Date())
 
-  // DATA TEMPORARY STATE
-  const [flightDestination, setFlightDestination] = useState()
-
   // UTILITIES
   const [isError, setIsError] = useState(false)
+  const [remoteNotification, setRemoteNotification] = useState()
+
+  useEffect(() => {
+    remoteNotification && notification.localNotif({
+      title: remoteNotification.title,
+      description: remoteNotification.data.description,
+      message: remoteNotification.message,
+      soundName: remoteNotification.sound
+    })
+
+    return () => console.log(`Notificationn ${remoteNotification.id} has been send.`)
+  }, [remoteNotification])
 
   const saveReminder = PromiseKit({
     data: {
@@ -108,6 +132,7 @@ export default function FlightScheduleForm({}) {
         console.log('SUCCESS - DESTINATION DATA', res)
         saveFlight({
           id: shortid.generate(),
+          notificationId: Math.floor(Math.random() * 10000) + 1,
           ...res
         })
         eraseAllStateValues()
@@ -163,10 +188,6 @@ export default function FlightScheduleForm({}) {
         iconName='notifications'
         onPressButton={onPressSetReminder}
         isDisabled={!inputFLNumber ? true : false}
-      />
-      <Button
-        title='TEST NOTIFICATION'
-        onPressButton={() => notification.localNotif()}
       />
       <Modal
         isModalVisible={isError}

@@ -138,7 +138,7 @@ export default function FlightCard({
         />
         <TextLink
           title='Remove'
-          onPressText={() => removeFlight(flightData.id)}
+          onPressText={() => removeFlight(flightData.id, flightData.notificationId)}
           colorType='warning'
         />
       </Animated.View>

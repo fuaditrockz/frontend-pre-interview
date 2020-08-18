@@ -1,6 +1,9 @@
 import React from 'react'
 import { AsyncStorage } from 'react-native'
 
+import NotificationService from '../services/NotificationService'
+import { amPmConvert } from '../helpers'
+
 export const RootContext = React.createContext()
 
 export class RootContextProvider extends React.Component {
@@ -17,6 +20,7 @@ export class RootContextProvider extends React.Component {
       currentScreen: ''
     }
 
+    this.notificationService = new NotificationService()
     this.onSliderPanelFull = this.onSliderPanelFull.bind(this)
     this.onSliderPanelDown = this.onSliderPanelDown.bind(this)
     this.saveFlight = this.saveFlight.bind(this)
@@ -72,16 +76,26 @@ export class RootContextProvider extends React.Component {
     this.setState({
       savedFlights: [...savedFlights, flight]
     })
-    AsyncStorage.getItem('savedFlights')
+    await AsyncStorage.getItem('savedFlights')
       .then((flights) => {
         const fl = flights ? JSON.parse(flights) : [];
         fl.flightDate && fl.flightDate.toString()
         fl.push(flight);
         AsyncStorage.setItem('savedFlights', JSON.stringify(fl));
       })
+    this.notificationService.scheduleNotif({
+      id: flight.notificationId,
+      title: 'Flight Reminder',
+      description: `${flight.airlineDetails.airline_name} with flight number  ${flight.flighNumber} will flight today at ${amPmConvert(flight.time)} to ${flight.flightDestination.name}.`,
+      message: `Reminder for flight number: ${flight.flightNumber}`,
+      subText: flight.flightNumber
+    })
+    this.notificationService.getScheduledLocalNotifications(n => {
+      console.log('GET ID LAST NOTIF SET', n)
+    })
   }
 
-  removeFlight(id) {
+  removeFlight(id, notifId) {
     const { savedFlights } = this.state
     this.setState({
       savedFlights: savedFlights.filter(flight => {
@@ -97,6 +111,11 @@ export class RootContextProvider extends React.Component {
           AsyncStorage.setItem('savedFlights', JSON.stringify(localStorageData))
         }
       })
+
+    this.notificationService.cancelNotif(notifId)
+    this.notificationService.getScheduledLocalNotifications(n => {
+      console.log('GET ID LAST NOTIF SET', n)
+    })
   }
 
   render() {
