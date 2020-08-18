@@ -6,7 +6,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient'
 
 import { RootContext } from '../context'
-import { StatusBar } from '../components/atoms'
+import StatusBar from '../components/atoms/StatusBar'
 import {
   RemindersList,
   SetReminderForm,
