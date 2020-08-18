@@ -2,11 +2,11 @@ import React from 'react'
 import {
   View,
   StyleSheet,
-  Dimensions,
+
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import { StatusBar } from '../components/atoms'
+import StatusBar from '../components/atoms/StatusBar'
 import { ReminderDetails } from '../components/organisms'
 
 export default class ShowReminderDetailsScreen extends React.Component {
