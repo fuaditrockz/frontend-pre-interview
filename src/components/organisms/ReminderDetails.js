@@ -47,7 +47,7 @@ export default function ReminderDetails({
         data={setupData}
         isHaveHeader
         flightNumber={data.flightNumber}
-        airlineName={data.airlineDetails.airline_name}
+        airlineName={data.airlineDetails.airline_name || 'No airline name'}
         headerColor={getHeaderColor()}
       />
     )
