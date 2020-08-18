@@ -10,6 +10,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5'
 import shortid from 'shortid'
 
+import NotificationService from '../../services/NotificationService'
 import {
   PromiseKit,
   getHKAirportData,
@@ -21,6 +22,7 @@ import { Input, Button, Modal } from '../atoms'
 
 export default function FlightScheduleForm({}) {
   const { savedFlights, saveFlight } = useContext(RootContext)
+  const notification = new NotificationService()
 
   // INPUT STATE
   const [inputFLNumber, setInputFLNumber] = useState('')
@@ -161,6 +163,10 @@ export default function FlightScheduleForm({}) {
         iconName='notifications'
         onPressButton={onPressSetReminder}
         isDisabled={!inputFLNumber ? true : false}
+      />
+      <Button
+        title='TEST NOTIFICATION'
+        onPressButton={() => notification.localNotif()}
       />
       <Modal
         isModalVisible={isError}

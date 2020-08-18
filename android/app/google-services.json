@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "163821893179",
+    "firebase_url": "https://frontend-pre-interview.firebaseio.com",
+    "project_id": "frontend-pre-interview",
+    "storage_bucket": "frontend-pre-interview.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:163821893179:android:eace4116325299a8f40e1e",
+        "android_client_info": {
+          "package_name": "com.frontendpreinterview"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "163821893179-6st97beqfg53p4ltubcf3fjofionqs2f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.frontendpreinterview",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "163821893179-p8a1cqtp3ua4npts4rglctfptmd9bcbn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzm8zZblzR4lfnJBtRiZOrnC4g45CteKM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "163821893179-p8a1cqtp3ua4npts4rglctfptmd9bcbn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
