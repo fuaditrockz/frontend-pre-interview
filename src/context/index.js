@@ -1,6 +1,10 @@
 import React from 'react'
-import { AsyncStorage } from 'react-native'
+import {
+  AsyncStorage,
+  Platform
+} from 'react-native'
 import FlashMessage from 'react-native-flash-message'
+import { FlashDialog } from '../components/atoms'
 
 import NotificationService from '../services/NotificationService'
 import { amPmConvert } from '../helpers'
@@ -18,7 +22,11 @@ export class RootContextProvider extends React.Component {
         panelFullMode: false
       },
       savedFlights: [],
-      currentScreen: ''
+      currentScreen: '',
+      flashMessage: {
+        isShow: false,
+        status: 'idle'
+      }
     }
 
     this.flashMessageRef = React.createRef().current
@@ -73,6 +81,17 @@ export class RootContextProvider extends React.Component {
     })
   }
 
+  closeFlashDialog() {
+    setTimeout(() => {
+      this.setState({
+        flashMessage: {
+          isShow: false,
+          status: 'idle'
+        }
+      })
+    }, 800);
+  }
+
   async saveFlight(flight) {
     const { savedFlights } = this.state
     this.setState({
@@ -91,20 +110,32 @@ export class RootContextProvider extends React.Component {
       title: 'Flight Reminder',
       description: `${flight.airlineDetails.airline_name} with flight number  ${flight.flighNumber} will flight today at ${amPmConvert(flight.time)} to ${flight.flightDestination.name}.`,
       message: `Reminder for flight number: ${flight.flightNumber}`,
-      subText: flight.flightNumber
+      subText: flight.flightNumber,
+      forDate: new Date(flight.flightDate)
     })
 
     this.notificationService.getScheduledLocalNotifications(n => {
       console.log('GET ID LAST NOTIF SET', n)
     })
 
-    this.refs.rootFlash.showMessage({
-      message: 'Reminder Added',
-      description: `Reminder for ${flight.flightNumber} has been set.`,
-      type: "default",
-      backgroundColor: "#05c46b",
-      color: "#fff"
-    })
+    if (Platform.OS === 'ios') {
+      this.refs.rootFlash.showMessage({
+        message: 'Reminder Added',
+        description: `Reminder for ${flight.flightNumber} has been set.`,
+        type: "default",
+        backgroundColor: "#05c46b",
+        color: "#fff"
+      })
+    } else {
+      this.setState({
+        flashMessage: {
+          isShow: true,
+          status: 'success'
+        }
+      })
+    }
+
+    this.closeFlashDialog()
   }
 
   removeFlight(id, notifId) {
@@ -129,26 +160,37 @@ export class RootContextProvider extends React.Component {
       console.log('GET ID LAST NOTIF SET', n)
     })
 
-    this.refs.rootFlash.showMessage({
-      message: 'Reminder deleted',
-      description: `Reminder has been deleted.`,
-      type: "default",
-      backgroundColor: "#f53b57",
-      color: "#fff"
-    })
+    if (Platform.OS === 'ios') {
+      this.refs.rootFlash.showMessage({
+        message: 'Reminder deleted',
+        description: `Reminder has been deleted.`,
+        type: "default",
+        backgroundColor: "#f53b57",
+        color: "#fff"
+      })
+    } else {
+      this.setState({
+        flashMessage: {
+          isShow: true,
+          status: 'warning'
+        }
+      })
+    }
+
+    this.closeFlashDialog()
   }
 
   render() {
-    const { state } = this
-    console.log(state.theme.backgroundColor)
-    console.log(state.savedFlights)
-    console.log(state.theme.statusBar)
+    const { flashMessage: { status, isShow }, theme, savedFlights } = this.state
+    console.log(theme.backgroundColor)
+    console.log(savedFlights)
+    console.log(theme.statusBar)
     
     console.log('FLASH', this.refs)
     return (
       <RootContext.Provider
         value={{
-          ...state,
+          ...this.state,
           onSliderPanelFull: this.onSliderPanelFull,
           onSliderPanelDown: this.onSliderPanelDown,
           saveFlight: this.saveFlight,
@@ -156,7 +198,16 @@ export class RootContextProvider extends React.Component {
           changeCurrentScreenName: this.changeCurrentScreenName
         }}
       >
-        <FlashMessage ref='rootFlash' position="top" />
+        {Platform.OS === 'ios' ? (
+          <FlashMessage ref='rootFlash' position="top" />
+        ) : (
+          <FlashDialog
+            isFlashVisible={isShow}
+            title={status === 'success' ? 'Reminder Added' : 'Reminder deleted.'}
+            description={status === 'success' ? 'Reminder for has been set' : 'Reminder has been deleted.'}
+            color={status}
+          />
+        )}
         {this.props.children}
       </RootContext.Provider>
     )

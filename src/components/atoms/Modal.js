@@ -22,9 +22,6 @@ export default function Modal({
       animationType="slide"
       transparent={true}
       visible={isModalVisible}
-      onRequestClose={() => {
-        Alert.alert("Modal has been closed.");
-      }}
     >
       <View
         style={[
