@@ -20,13 +20,15 @@ export function PromiseKit({
 export const getHKAirportData = async date => {
   const stateDate = formatDate(date.toDateString())
   const today = formatDate(todayDate.toDateString())
+  const comparedDate = dates.compare(stateDate, today)
   const url = `https://www.hongkongairport.com/flightinfo-rest/rest/flights/past?date=${stateDate}&lang=en&cargo=false&arrival=false`
 
   try {
     const HKApiResponse = await fetch(url)
     const jsonData = await HKApiResponse.json()
+    console.log('DATA FROM API', jsonData)
     return PromiseKit({
-      data: stateDate === today ? jsonData[1].list : jsonData[0].list,
+      data: comparedDate === 0 || comparedDate === 1 ? jsonData[1].list : jsonData[0].list,
       errorMessage: 'https://www.hongkongairport.com was failed to fetch'
     })
   } catch (error) {

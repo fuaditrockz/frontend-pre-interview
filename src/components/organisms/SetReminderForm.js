@@ -24,7 +24,7 @@ import { Input, Button, Modal } from '../atoms'
 
 const today = new Date()
 
-export default function FlightScheduleForm({}) {
+export default function SetReminderForm({}) {
   const { savedFlights, saveFlight } = useContext(RootContext)
   const notification = new NotificationService(
     null,
