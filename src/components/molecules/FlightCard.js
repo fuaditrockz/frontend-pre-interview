@@ -17,7 +17,6 @@ import { TextLink } from '../atoms'
 export default function FlightCard({
   flightData,
   isNotificationActive,
-  isPassed,
   index
 }) {
   const { removeFlight  } = useContext(RootContext)
@@ -38,8 +37,7 @@ export default function FlightCard({
   const onPressSeeDetails = () => {
     navigation.navigate('ShowReminderDetails', {
       ...flightData,
-      index,
-      isPassed
+      index
     })
   }
 
@@ -67,7 +65,7 @@ export default function FlightCard({
     return (
       <View style={styles.iconLeft}>
         <MaterialIcon
-          name={`notifications-${isNotificationActive && isPassed === -1 ? 'active' : 'paused'}`}
+          name={`notifications-${isNotificationActive && flightData.isActive ? 'active' : 'paused'}`}
           size={20}
           color={isNotificationActive ? '#fff' : '#d2dae2'}
         />
@@ -88,7 +86,7 @@ export default function FlightCard({
             {amPmConvert(flightData.time)}, {flightData.flightDate.toDateString()}
           </Text>
           <View style={{ flexDirection: 'row' }}>
-            {isPassed === 1 && (
+            {!flightData.isActive && (
               <MaterialIcon
                 name="check-circle"
                 size={12}
@@ -97,7 +95,7 @@ export default function FlightCard({
               />
             )}
             <Text style={[styles.flightDate, { marginStart: 3 }]}>
-              {isPassed === -1 ? 'Standby' : 'Has Landed'}
+              {flightData.isActive ? 'Standby' : 'Has Landed'}
             </Text>
           </View>
         </View>
@@ -108,7 +106,7 @@ export default function FlightCard({
   const renderRight = () => {
     return (
       <View style={[styles.iconRight, styles.divider]}>
-        {isPassed === 1 ? (
+        {flightData.isActive ? (
           <MaterialIcon name="flight-land" size={25} color='#fff' />
         ) : (
           <MaterialIcon name="flight" size={25} color='#fff' />
@@ -151,9 +149,9 @@ export default function FlightCard({
         style={[
           styles.flightView,
           {backgroundColor: checkIndexIsEven(index) ? (
-            isPassed === 1 ? 'rgba(72, 84, 96, 0.7)' : '#ef5777'
+            !flightData.isActive ? 'rgba(72, 84, 96, 1)' : '#ef5777'
           ) : (
-            isPassed === 1 ? 'rgba(128, 142, 155, 0.9)'  : '#575fcf'
+            !flightData.isActive ? 'rgba(128, 142, 155, 1)'  : '#575fcf'
           )}
         ]}
         activeOpacity={0.8}

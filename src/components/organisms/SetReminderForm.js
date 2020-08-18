@@ -6,7 +6,7 @@ import {
   Image,
   Keyboard
 } from 'react-native'
-import FlashMessage, { showMessage, hideMessage } from 'react-native-flash-message'
+import { showMessage, hideMessage } from 'react-native-flash-message'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5'
 import shortid from 'shortid'
@@ -16,10 +16,13 @@ import {
   PromiseKit,
   getHKAirportData,
   getAirlineData,
-  getDestinationData
+  getDestinationData,
+  dates
 } from '../../helpers'
 import { RootContext } from '../../context'
 import { Input, Button, Modal } from '../atoms'
+
+const today = new Date()
 
 export default function FlightScheduleForm({}) {
   const { savedFlights, saveFlight } = useContext(RootContext)
@@ -123,6 +126,7 @@ export default function FlightScheduleForm({}) {
         saveFlight({
           id: shortid.generate(),
           notificationId: Math.floor(Math.random() * 10000) + 1,
+          isActive: dates.compare(today, res.flightDate) === -1 ? true : false,
           ...res
         })
         eraseAllStateValues()

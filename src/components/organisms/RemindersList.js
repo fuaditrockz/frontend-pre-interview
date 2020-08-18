@@ -46,7 +46,6 @@ export default function RemindersList() {
               flightData={flight}
               key={index}
               isNotificationActive={flight.isActive}
-              isPassed={dates.compare(today, flight.flightDate)}
             />
           )
       })}

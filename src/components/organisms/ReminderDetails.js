@@ -12,9 +12,9 @@ export default function ReminderDetails({
 }) {
   const getHeaderColor = () => {
     return checkIndexIsEven(data.index) ? (
-      data.isPassed === 1 ? 'rgba(72, 84, 96, 1)' : '#ef5777'
+      !data.isActive ? 'rgba(72, 84, 96, 1)' : '#ef5777'
     ) : (
-      data.isPassed === 1 ? 'rgba(128, 142, 155, 1)'  : '#575fcf'
+      !data.isActive ? 'rgba(128, 142, 155, 1)'  : '#575fcf'
     )
   }
 
@@ -48,7 +48,6 @@ export default function ReminderDetails({
         isHaveHeader
         flightNumber={data.flightNumber}
         airlineName={data.airlineDetails.airline_name}
-        isPassed={data.isPassed}
         headerColor={getHeaderColor()}
       />
     )

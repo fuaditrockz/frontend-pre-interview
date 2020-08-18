@@ -11,7 +11,6 @@ export default function DetailsCard({
   data,
   flightNumber,
   airlineName,
-  isPassed,
   isHaveHeader,
   headerColor,
   isDestinationsCard
@@ -33,13 +32,13 @@ export default function DetailsCard({
           </Text>
         </View>
         <View style={{ justifyContent: 'center', alignItems: 'center'  }}>
-          {isPassed === 1 ? (
+          {!data.isActive ? (
             <MaterialIcon name="flight-land" size={30} color='#fff' />
           ) : (
             <MaterialIcon name="flight" size={30} color='#fff' />
           )}
           <Text style={[ styles.miniText, styles.fontDim ]}>
-            {isPassed === -1 ? 'Standby' : 'Has Landed'}
+            {data.isActive ? 'Standby' : 'Has Landed'}
           </Text>
         </View>
       </View>
