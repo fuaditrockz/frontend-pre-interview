@@ -6,7 +6,7 @@ import {
   Image,
   Keyboard
 } from 'react-native'
-import { showMessage, hideMessage } from 'react-native-flash-message'
+import { showMessage } from 'react-native-flash-message'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5'
 import shortid from 'shortid'
@@ -37,6 +37,7 @@ export default function SetReminderForm({}) {
 
   // UTILITIES
   const [isError, setIsError] = useState(false)
+  const [isDataExist, setIsDataExist] = useState(false)
   const [remoteNotification, setRemoteNotification] = useState()
 
   useEffect(() => {
@@ -48,7 +49,7 @@ export default function SetReminderForm({}) {
       soundName: remoteNotification.sound
     })
 
-    return () => console.log(`Notificationn ${typeof remoteNotification === 'object' && remoteNotification.id} has been send.`)
+    return () => console.log(`Notification ${typeof remoteNotification === 'object' && remoteNotification.id} has been send.`)
   }, [remoteNotification])
 
   const saveReminder = PromiseKit({
@@ -80,14 +81,23 @@ export default function SetReminderForm({}) {
         })
 
         if (fixedData) {
-          delete Object.assign(fixedData, {['anotherFlights']: fixedData['flight'] })['flight']
+          const sameFlightNumber = savedFlights.some(fl => fl.flightNumber === res.inputFLNumber)
+          const sameFlightDate = savedFlights.some(fl => dates.compare(fl.flightDate, res.inputFLDate) === 0)
+          console.log('FIXED DATA', `${sameFlightDate} - ${sameFlightNumber}`)
+          if (sameFlightNumber && sameFlightDate) {
+            setIsDataExist(true)
+            throw new Error('Flight number has been added on the list.')
+          } else {
+            delete Object.assign(fixedData, {['anotherFlights']: fixedData['flight'] })['flight']
 
-          const thisAirlineIndex = fixedData.anotherFlights.findIndex(arl => arl.no === res.inputFLNumber)
-          console.log(thisAirlineIndex)
-          if (thisAirlineIndex > -1) {
-            fixedData.anotherFlights.splice(thisAirlineIndex, 1) 
-          } 
+            const thisAirlineIndex = fixedData.anotherFlights.findIndex(arl => arl.no === res.inputFLNumber)
+            console.log(thisAirlineIndex)
+            if (thisAirlineIndex > -1) {
+              fixedData.anotherFlights.splice(thisAirlineIndex, 1) 
+            } 
+          }
         } else {
+          setIsError(true)
           throw new Error('Flight number not found')
         }
 
@@ -136,7 +146,6 @@ export default function SetReminderForm({}) {
         })
       })
       .catch(err => {
-        setIsError(true)
         console.log(err)
       })
   }
@@ -153,6 +162,54 @@ export default function SetReminderForm({}) {
     setInputFLDate(new Date())
     setInputFLNumber('')
     Keyboard.dismiss()
+  }
+
+  const renderModal = () => {
+    if (isError) {
+      return (
+        <Modal
+          isModalVisible={isError}
+          onPressClose={() => setIsError(false)}
+          isModalViewBlur
+        >
+          <Image
+            style={{
+              width: 200,
+              height: 200
+            }}
+            source={require('../../../assets/404.gif')}
+          />
+          <View style={{ paddingHorizontal: 20 }}>
+            <Text style={styles.notFoundDialog}>
+              We're sorry, flight number {inputFLNumber} not found.
+            </Text>
+          </View>
+        </Modal>
+      )
+    } else if (isDataExist) {
+      return (
+        <Modal
+          isModalVisible={isDataExist}
+          onPressClose={() => setIsDataExist(false)}
+        >
+          <Image
+            style={{
+              width: 250,
+              height: 200,
+              borderRadius: 20
+            }}
+            source={require('../../../assets/exist.gif')}
+          />
+          <View style={{ paddingHorizontal: 20 }}>
+            <Text style={styles.notFoundDialog}>
+              Flight number {inputFLNumber} has been set.
+            </Text>
+          </View>
+        </Modal>
+      )
+    } else {
+      return null
+    }
   }
 
   console.log('ALL SAVED DATA', savedFlights)
@@ -187,23 +244,7 @@ export default function SetReminderForm({}) {
         onPressButton={onPressSetReminder}
         isDisabled={!inputFLNumber ? true : false}
       />
-      <Modal
-        isModalVisible={isError}
-        onPressClose={() => setIsError(false)}
-      >
-         <Image
-          style={{
-            width: 200,
-            height: 200
-          }}
-          source={require('../../../assets/404.gif')}
-        />
-        <View style={{ paddingHorizontal: 20 }}>
-          <Text style={styles.notFoundDialog}>
-            We're sorry, flight number {inputFLNumber} not found.
-          </Text>
-        </View>
-      </Modal>
+      {renderModal()}
     </View>
   )
 }

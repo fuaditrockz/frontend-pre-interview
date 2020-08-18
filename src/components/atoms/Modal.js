@@ -15,6 +15,7 @@ export default function Modal({
   children,
   isModalVisible,
   onPressClose,
+  isModalViewBlur,
   isModalWithoutCloser
 }) {
   return (
@@ -31,7 +32,12 @@ export default function Modal({
           }
         ]}
       >
-        <View style={styles.modalView}>
+        <View style={[
+          styles.modalView,
+          {
+            backgroundColor: isModalViewBlur ? "#f7f7f7" : '#fff'
+          }
+        ]}>
           {children}
           {!isModalWithoutCloser && (
             <TouchableHighlight
@@ -53,17 +59,15 @@ const styles = StyleSheet.create({
     height,
     width,
     position: 'absolute',
-    top: Platform.OS === 'ios' ? -22 : -20,
+    top: Platform.OS === 'ios' ? -22 : -25,
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     marginTop: 22
   },
   modalView: {
-    minHeight: 200,
     width: '80%',
     margin: 20,
-    backgroundColor: "#f7f7f7",
     borderRadius: 20,
     alignItems: "center",
     shadowColor: "#000",
