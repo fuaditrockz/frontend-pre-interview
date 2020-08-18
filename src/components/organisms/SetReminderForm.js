@@ -4,7 +4,7 @@ import {
   Text,
   StyleSheet,
   Image,
-  Keyboard
+  Keyboard,
 } from 'react-native'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5'
@@ -19,18 +19,6 @@ import {
 } from '../../helpers'
 import { RootContext } from '../../context'
 import { Input, Button, Modal } from '../atoms'
-
-const test = {
-  "color": null, 
-  "data": {}, 
-  "finish": [Function], 
-  "foreground": true, 
-  "id": "680299048", 
-  "message": "Test notification from Firebase.", 
-  "sound": "default", 
-  "title": "Test", 
-  "userInteraction": false
-}
 
 export default function FlightScheduleForm({}) {
   const { savedFlights, saveFlight } = useContext(RootContext)
@@ -48,14 +36,15 @@ export default function FlightScheduleForm({}) {
   const [remoteNotification, setRemoteNotification] = useState()
 
   useEffect(() => {
-    remoteNotification && notification.localNotif({
+    // Get Cloud messenger notification
+    typeof remoteNotification === 'object' && notification.localNotif({
       title: remoteNotification.title,
       description: remoteNotification.data.description,
       message: remoteNotification.message,
       soundName: remoteNotification.sound
     })
 
-    return () => console.log(`Notificationn ${remoteNotification.id} has been send.`)
+    return () => console.log(`Notificationn ${typeof remoteNotification === 'object' && remoteNotification.id} has been send.`)
   }, [remoteNotification])
 
   const saveReminder = PromiseKit({
