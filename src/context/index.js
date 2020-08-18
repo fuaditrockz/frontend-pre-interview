@@ -1,5 +1,6 @@
 import React from 'react'
 import { AsyncStorage } from 'react-native'
+import FlashMessage from 'react-native-flash-message'
 
 import NotificationService from '../services/NotificationService'
 import { amPmConvert } from '../helpers'
@@ -20,6 +21,7 @@ export class RootContextProvider extends React.Component {
       currentScreen: ''
     }
 
+    this.flashMessageRef = React.createRef().current
     this.notificationService = new NotificationService()
     this.onSliderPanelFull = this.onSliderPanelFull.bind(this)
     this.onSliderPanelDown = this.onSliderPanelDown.bind(this)
@@ -77,12 +79,13 @@ export class RootContextProvider extends React.Component {
       savedFlights: [...savedFlights, flight]
     })
     await AsyncStorage.getItem('savedFlights')
-      .then((flights) => {
-        const fl = flights ? JSON.parse(flights) : [];
-        fl.flightDate && fl.flightDate.toString()
-        fl.push(flight);
-        AsyncStorage.setItem('savedFlights', JSON.stringify(fl));
-      })
+    .then((flights) => {
+      const fl = flights ? JSON.parse(flights) : [];
+      fl.flightDate && fl.flightDate.toString()
+      fl.push(flight);
+      AsyncStorage.setItem('savedFlights', JSON.stringify(fl));
+    })
+
     this.notificationService.scheduleNotif({
       id: flight.notificationId,
       title: 'Flight Reminder',
@@ -90,8 +93,17 @@ export class RootContextProvider extends React.Component {
       message: `Reminder for flight number: ${flight.flightNumber}`,
       subText: flight.flightNumber
     })
+
     this.notificationService.getScheduledLocalNotifications(n => {
       console.log('GET ID LAST NOTIF SET', n)
+    })
+
+    this.refs.rootFlash.showMessage({
+      message: 'Reminder Added',
+      description: `Reminder for ${flight.flightNumber} has been set.`,
+      type: "default",
+      backgroundColor: "#05c46b",
+      color: "#fff"
     })
   }
 
@@ -116,6 +128,14 @@ export class RootContextProvider extends React.Component {
     this.notificationService.getScheduledLocalNotifications(n => {
       console.log('GET ID LAST NOTIF SET', n)
     })
+
+    this.refs.rootFlash.showMessage({
+      message: 'Reminder deleted',
+      description: `Reminder has been deleted.`,
+      type: "default",
+      backgroundColor: "#f53b57",
+      color: "#fff"
+    })
   }
 
   render() {
@@ -123,6 +143,8 @@ export class RootContextProvider extends React.Component {
     console.log(state.theme.backgroundColor)
     console.log(state.savedFlights)
     console.log(state.theme.statusBar)
+    
+    console.log('FLASH', this.refs)
     return (
       <RootContext.Provider
         value={{
@@ -134,6 +156,7 @@ export class RootContextProvider extends React.Component {
           changeCurrentScreenName: this.changeCurrentScreenName
         }}
       >
+        <FlashMessage ref='rootFlash' position="top" />
         {this.props.children}
       </RootContext.Provider>
     )

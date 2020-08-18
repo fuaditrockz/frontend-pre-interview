@@ -4,8 +4,9 @@ import {
   Text,
   StyleSheet,
   Image,
-  Keyboard,
+  Keyboard
 } from 'react-native'
+import FlashMessage, { showMessage, hideMessage } from 'react-native-flash-message'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5'
 import shortid from 'shortid'
@@ -125,6 +126,10 @@ export default function FlightScheduleForm({}) {
           ...res
         })
         eraseAllStateValues()
+        showMessage({
+          message: "Simple message",
+          type: "info",
+        })
       })
       .catch(err => {
         setIsError(true)
